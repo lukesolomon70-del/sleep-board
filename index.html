@@ -1,73 +1,421 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex, nofollow, noarchive"><title>Family leaderboard</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&display=swap"><style>
-:root {
-  --ink: #1A2330; --muted: #6C7688; --paper: #F4F6F5;
-  --line: #E4E8E6; --teal: #1F7A72; --brass: #C8952B;
-  --track: #DDE4E1; --card: #FFFFFF;
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#151A30">
+<title>Family leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+:root{
+  --night:#151A30; --deep:#1E2442; --raise:#262D52; --line:#323A63;
+  --text:#EEF0F8; --muted:#97A0C2; --faint:#5E6790;
+  --green:#4FD18B; --amber:#F3B53F; --red:#F2625E; --dawn:#F7A88B;
+  --deepc:#5B6CF0; --remc:#9C7BF2; --lightc:#3D4675;
+  --font:'Atkinson Hyperlegible',ui-sans-serif,system-ui,sans-serif;
+  --disp:'Bricolage Grotesque','Atkinson Hyperlegible',ui-sans-serif,system-ui,sans-serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #E9EDEB; --muted: #8D97A3; --paper: #121817;
-    --line: #26302E; --teal: #4FB3A3; --brass: #D9AE55;
-    --track: #242E2C; --card: #171F1E;
+@media (prefers-color-scheme: light){
+  :root{
+    --night:#F1F2F8; --deep:#FFFFFF; --raise:#E7E9F4; --line:#D9DCEB;
+    --text:#161A2E; --muted:#5B6385; --faint:#9AA1BF;
+    --green:#17955A; --amber:#B97A06; --red:#CF3B37; --dawn:#C9603E;
+    --deepc:#4152D9; --remc:#7D58DE; --lightc:#C9CEE6;
+    color-scheme:light;
   }
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0 auto; padding: 34px 20px 72px; max-width: 620px;
-  background: var(--paper); color: var(--ink);
-  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
-  font-size: 16px; line-height: 1.5;
-  font-variant-numeric: tabular-nums; -webkit-text-size-adjust: 100%;
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--night);color:var(--text);font-family:var(--font);
+  font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums;
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+#app{max-width:640px;margin:0 auto;padding:18px 18px 64px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,summary:focus-visible{outline:2px solid var(--dawn);outline-offset:3px;border-radius:6px}
+h2{font-family:var(--disp);font-weight:700;font-size:1.45rem;line-height:1.15;margin:0 0 4px;letter-spacing:-.01em}
+.sec{margin-top:44px}
+.note{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+
+/* who strip */
+.who{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
+.who::-webkit-scrollbar{display:none}
+.who button{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--deep);
+  border:1px solid var(--line);color:var(--muted);font-weight:700;font-size:.92rem}
+.who button[aria-pressed="true"]{background:var(--text);color:var(--night);border-color:var(--text)}
+.who button .me{font-weight:400;opacity:.7;margin-left:4px}
+
+/* hero */
+.hero{margin-top:10px;background:var(--deep);border-radius:28px;padding:22px 20px 20px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--glow,var(--faint)) 22%,transparent),transparent);pointer-events:none}
+.hero > *{position:relative}
+.greet{font-family:var(--disp);font-weight:800;font-size:2rem;line-height:1.05;letter-spacing:-.02em;margin:0}
+.when{color:var(--muted);margin:6px 0 0;font-size:.95rem}
+.rings{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;align-items:center;margin:18px 0 6px}
+.big{display:flex;flex-direction:column;align-items:center}
+.small{display:grid;gap:12px}
+.mini{display:flex;align-items:center;gap:12px}
+.ring{display:block}
+.ring .trk{stroke:var(--raise)}
+.ring .arc{transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)}
+.rlab{font-size:.85rem;color:var(--muted);margin-top:2px;text-align:center}
+.mini .t{font-weight:700}
+.mini .s{color:var(--muted);font-size:.85rem;white-space:nowrap}
+.why{font-size:1.02rem;margin:14px 0 0}
+.why b{font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{padding:5px 11px;border-radius:999px;background:var(--raise);font-size:.85rem;font-weight:700}
+.chip.hot{background:color-mix(in srgb,var(--dawn) 22%,var(--raise));color:var(--text)}
+.claim{margin-top:16px;width:100%;padding:12px;border-radius:14px;background:var(--text);color:var(--night);font-weight:700}
+details.more{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+details.more summary{cursor:pointer;color:var(--muted);font-size:.92rem;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:" +";}
+details.more[open] summary::after{content:" \2212";}
+.pr{display:flex;justify-content:space-between;gap:14px;padding:4px 0;font-size:.9rem}
+.pr span:last-child{color:var(--muted);text-align:right}
+.ph{font-weight:700;font-size:.9rem;margin:12px 0 2px}
+
+/* picker */
+.pick h1{font-family:var(--disp);font-weight:800;font-size:2.1rem;line-height:1.05;margin:6px 0 8px;letter-spacing:-.02em}
+.pick p{color:var(--muted);margin:0 0 18px}
+.pick .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.pick .grid button{padding:16px;border-radius:18px;background:var(--deep);border:1px solid var(--line);font-family:var(--disp);font-weight:700;font-size:1.15rem;text-align:left}
+
+/* matchups */
+.next{background:var(--deep);border-radius:18px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.next .vs{font-family:var(--disp);font-weight:700;font-size:1.15rem}
+.next .tip{color:var(--muted);font-size:.85rem}
+.mu{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.mu:last-child{border-bottom:0}
+.side{display:flex;align-items:baseline;gap:10px}
+.side.r{justify-content:flex-end;text-align:right}
+.side .nm{font-weight:700}
+.side .sc{font-family:var(--disp);font-weight:700;font-size:1.35rem}
+.side.lose{color:var(--muted)}
+.side.lose .sc{color:var(--faint)}
+.side.win .sc{color:var(--green)}
+.mu .mid{color:var(--faint);font-size:.8rem;text-align:center;min-width:52px}
+.mu.mine{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--dawn) 10%,transparent),transparent)}
+.bye{color:var(--muted);font-size:.9rem;padding-top:10px}
+table.rec{width:100%;border-collapse:collapse;margin-top:6px;font-size:.95rem}
+table.rec td{padding:7px 0;border-bottom:1px solid var(--line)}
+table.rec td.n{text-align:right;color:var(--muted);width:72px}
+table.rec td.w{text-align:right;font-weight:700;width:64px}
+table.rec tr.mine td{color:var(--text)}
+table.rec tr.mine td:first-child{font-weight:700}
+.nmb{font-weight:700;text-align:left}
+.nmb:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* bars */
+.row{padding:10px 0}
+.row.mine .top .nmb{color:var(--dawn)}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.val{font-family:var(--disp);font-weight:700;font-size:1.1rem}
+.meta{color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:4px 14px}
+.bar{display:flex;height:12px;border-radius:7px;background:var(--raise);overflow:hidden;margin:7px 0 5px}
+.bar i{display:block;height:100%}
+.legend{display:flex;gap:16px;font-size:.82rem;color:var(--muted);margin:2px 0 6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.dim{color:var(--faint)}
+
+/* week */
+.race .bar{height:16px}
+.race .bar i{background:var(--text);opacity:.85;border-radius:8px}
+.race .row.first .bar i{background:var(--dawn);opacity:1}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.cat{background:var(--deep);border-radius:16px;padding:12px 14px}
+.cat h3{margin:0 0 6px;font-size:.9rem;font-weight:700;color:var(--muted)}
+.cat ol{margin:0;padding:0;list-style:none;font-size:.9rem}
+.cat li{display:flex;justify-content:space-between;gap:8px;padding:1px 0}
+.cat li:first-child{font-weight:700}
+.cat li span:last-child{color:var(--muted);font-weight:400;text-align:right}
+.cat.pen h3{color:var(--red)}
+details.all{margin-top:12px}
+details.all summary{cursor:pointer;color:var(--muted);font-size:.92rem;padding:8px 0}
+
+/* trend */
+.trend{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 4px}
+.trend i{flex:1;border-radius:4px 4px 2px 2px;min-height:4px;background:var(--raise)}
+.tl{display:flex;justify-content:space-between;color:var(--faint);font-size:.78rem}
+
+footer{margin-top:48px;color:var(--faint);font-size:.82rem}
+@media (max-width:420px){
+  .greet{font-size:1.7rem}
+  .cats{grid-template-columns:1fr}
 }
-h1 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-weight: 400; font-size: 2.6rem; line-height: 1.05;
-  margin: 0 0 6px; letter-spacing: -0.01em;
+@media (prefers-reduced-motion: reduce){ .ring .arc{transition:none} }
+</style></head>
+<body><div id="app"></div>
+<script id="data" type="application/json">{"label": "Family", "day": "Friday, October 30", "day_n": 6, "sleep": [{"name": "Brady", "minutes": 504, "asleep": "8h 24m", "score": 78, "eff": 93.0}, {"name": "Ella", "minutes": 448, "asleep": "7h 28m", "score": 79, "eff": 85.2}, {"name": "Regina", "minutes": 379, "asleep": "6h 19m", "score": 74, "eff": 93.3}, {"name": "Ted", "minutes": 344, "asleep": "5h 44m", "score": 82, "eff": 93.0}, {"name": "Luke", "minutes": 0, "asleep": null, "score": null, "eff": null}, {"name": "Maleeya", "minutes": 0, "asleep": null, "score": null, "eff": null}], "today": [{"name": "Brady", "steps": 14431.0, "load": 68, "workouts": 4}, {"name": "Ted", "steps": 13115.0, "load": 77, "workouts": 2}, {"name": "Ella", "steps": 11045.0, "load": 37, "workouts": 3}, {"name": "Regina", "steps": 8949.0, "load": 5, "workouts": 2}, {"name": "Maleeya", "steps": 3472.0, "load": null, "workouts": 0}, {"name": "Luke", "steps": 2448.0, "load": 0, "workouts": 1}], "points": [["Brady", 72.2], ["Maleeya", 67.7], ["Luke", 52.7], ["Ella", 43.7], ["Regina", 39.2], ["Ted", 35.7]], "categories": [{"label": "Sleep Score", "penalty": false, "entries": [["Maleeya", "73 avg  (4 nights)"], ["Luke", "72 avg  (4 nights)"], ["Brady", "69 avg  (5 nights)"], ["Regina", "66 avg  (5 nights)"], ["Ella", "66 avg  (6 nights)"], ["Ted", "65 avg  (5 nights)"]]}, {"label": "Recovery", "penalty": false, "entries": [["Regina", "75 avg"], ["Brady", "73 avg"], ["Ted", "69 avg"], ["Luke", "64 avg"], ["Ella", "61 avg"], ["Maleeya", "60 avg"]]}, {"label": "Effort", "penalty": false, "entries": [["Brady", "66 vs your normal"], ["Luke", "58 vs your normal"], ["Ted", "55 vs your normal"], ["Regina", "45 vs your normal"], ["Ella", "40 vs your normal"], ["Maleeya", "33 vs your normal"]]}, {"label": "Restorative sleep", "penalty": false, "entries": [["Maleeya", "13h 43m deep+REM"], ["Regina", "13h 22m deep+REM"], ["Brady", "12h 31m deep+REM"], ["Luke", "12h 08m deep+REM"], ["Ted", "11h 41m deep+REM"], ["Ella", "11h 32m deep+REM"]]}, {"label": "Steps", "penalty": false, "entries": [["Ted", "93,223 steps"], ["Ella", "85,610 steps"], ["Maleeya", "72,291 steps"], ["Brady", "58,356 steps"], ["Luke", "57,066 steps"], ["Regina", "39,312 steps"]]}, {"label": "Cardio load", "penalty": false, "entries": [["Ted", "682 load"], ["Maleeya", "679 load"], ["Ella", "245 load"], ["Brady", "227 load"], ["Luke", "132 load"], ["Regina", "26 load"]]}, {"label": "Workouts", "penalty": false, "entries": [["Ella", "25 sessions"], ["Brady", "22 sessions"], ["Maleeya", "11 sessions"], ["Luke", "10 sessions"], ["Ted", "7 sessions"], ["Regina", "6 sessions"]]}, {"label": "Perfect days", "penalty": false, "entries": [["Brady", "4 of 7"], ["Maleeya", "3 of 7"], ["Ella", "3 of 7"], ["Luke", "2 of 7"]]}, {"label": "Most consistent", "penalty": false, "entries": [["Maleeya", "12 min typical swing"], ["Luke", "27 min typical swing"], ["Ella", "40 min typical swing"], ["Brady", "46 min typical swing"], ["Regina", "48 min typical swing"], ["Ted", "57 min typical swing"]]}, {"label": "Most improved", "penalty": false, "entries": [["Brady", "+11.6 vs last week"], ["Regina", "+4.2 vs last week"], ["Luke", "+2.0 vs last week"], ["Ella", "-1.7 vs last week"], ["Ted", "-5.6 vs last week"], ["Maleeya", "-9.9 vs last week"]]}, {"label": "Workout time", "penalty": false, "entries": [["Brady", "9h 57m total"], ["Ella", "9h 03m total"], ["Maleeya", "8h 22m total"], ["Luke", "6h 25m total"], ["Ted", "6h 09m total"], ["Regina", "1h 53m total"]]}, {"label": "Wear streak", "penalty": false, "entries": [["Luke", "6 day streak"], ["Brady", "6 day streak"], ["Maleeya", "6 day streak"], ["Ella", "6 day streak"], ["Regina", "6 day streak"], ["Ted", "6 day streak"]]}, {"label": "Couch of the week", "penalty": true, "entries": []}, {"label": "Longest sit", "penalty": true, "entries": [["Brady", "293 min without moving"], ["Regina", "193 min without moving"], ["Ted", "243 min without moving"], ["Ella", "258 min without moving"], ["Luke", "176 min without moving"], ["Maleeya", "187 min without moving"]]}], "detail": [{"name": "Brady", "rank": 1, "of": 6, "daily": 86, "sleep_score": 78, "recovery": null, "sleep_parts": [["Duration", "8h 24m asleep vs 7h 33m, your usual"], ["Efficiency", "93% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 06m deep + 2h 17m REM = 40% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "50 min from your usual bedtime"]], "rec_parts": [["HRV", "no reading"], ["Resting HR", "no reading"], ["Breathing", "no reading"]], "activity": [["Steps", "22,054"], ["Cardio load", "184"], ["Workouts", "8"]], "trend": [55, 59, 66, 51, 79, 93, 86]}, {"name": "Regina", "rank": 2, "of": 6, "daily": 77, "sleep_score": 74, "recovery": 66, "sleep_parts": [["Duration", "6h 19m asleep vs 6h 19m, your usual"], ["Efficiency", "93% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 14m deep + 1h 17m REM = 40% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "46 min from your usual bedtime"]], "rec_parts": [["HRV", "20ms vs 21 baseline (-7%, normal)"], ["Resting HR", "63 bpm vs 63 baseline (+0%, strong)"], ["Breathing", "11.6 br/min vs 11.8 baseline (-2%, strong)"]], "activity": [["Steps", "9,343"], ["Cardio load", "11"], ["Workouts", "1"]], "trend": [59, 73, 57, 47, 46, 83, 77]}, {"name": "Ted", "rank": 3, "of": 6, "daily": 73, "sleep_score": 82, "recovery": 66, "sleep_parts": [["Duration", "5h 44m asleep vs 5h 40m, your usual"], ["Efficiency", "93% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 03m deep + 1h 29m REM = 44% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "13 min from your usual bedtime"]], "rec_parts": [["HRV", "no reading"], ["Resting HR", "52 bpm vs 51 baseline (+2%, normal)"], ["Breathing", "no reading"]], "activity": [["Steps", "16,106"], ["Cardio load", "124"], ["Workouts", "1"]], "trend": [63, 63, 78, 69, 43, 57, 73]}, {"name": "Ella", "rank": 4, "of": 6, "daily": 52, "sleep_score": 79, "recovery": 55, "sleep_parts": [["Duration", "7h 28m asleep vs 7h 35m, your usual"], ["Efficiency", "85% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 20m deep + 0h 58m REM = 31% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "3 min from your usual bedtime"]], "rec_parts": [["HRV", "100ms vs 113 baseline (-11%, normal)"], ["Resting HR", "57 bpm vs 59 baseline (-3%, strong)"], ["Breathing", "15.0 br/min vs 14.6 baseline (+3%, normal)"]], "activity": [["Steps", "11,747"], ["Cardio load", "4"], ["Workouts", "3"]], "trend": [56, 75, 62, 55, 42, 64, 52]}, {"name": "Luke", "rank": 5, "of": 6, "daily": 45, "sleep_score": null, "recovery": 70, "sleep_parts": [], "rec_parts": [["HRV", "no reading"], ["Resting HR", "63 bpm vs 63 baseline (+0%, strong)"], ["Breathing", "no reading"]], "activity": [["Steps", "1,940"], ["Workouts", "0"]], "trend": [69, 62, 74, 56, 73, 76, 45]}, {"name": "Maleeya", "rank": 6, "of": 6, "daily": null, "sleep_score": null, "recovery": null, "sleep_parts": [], "rec_parts": [], "activity": [["Steps", "7,691"], ["Workouts", "0"]], "trend": [70, 54, 47, 72, 56, 73, null]}], "stamp": "8:00pm", "day_iso": "2026-10-30", "history": {"Luke": {"days": {"2026-10-01": {"daily": 78, "sleep": 86, "rec": 69, "asleep": 489, "deep": 84, "rem": 104, "hrv": 50.9, "rhr": 62.0}, "2026-10-02": {"daily": 68, "sleep": 66, "rec": 70, "asleep": 393, "deep": 94, "rem": 84, "hrv": 51.3, "rhr": 61.0}, "2026-10-03": {"daily": 79, "sleep": 83, "rec": 76, "asleep": 452, "deep": 90, "rem": 97, "hrv": 62.9, "rhr": 60.0}, "2026-10-04": {"daily": 65, "rec": 65, "hrv": 62.1, "rhr": 60.0}, "2026-10-05": {"daily": 69, "sleep": 64, "rec": 74, "asleep": 438, "deep": 99, "rem": 121, "rhr": 60.0}, "2026-10-06": {"daily": 82, "sleep": 74, "rec": 89, "asleep": 424, "deep": 71, "rem": 79, "hrv": 66.8, "rhr": 58.0}, "2026-10-07": {"daily": 78, "sleep": 65, "rec": 90, "asleep": 440, "deep": 101, "rem": 99, "hrv": 65.6, "rhr": 59.0}, "2026-10-08": {"daily": 50, "sleep": 74, "rec": 25, "asleep": 522, "deep": 101, "rem": 118, "hrv": 31.7, "rhr": 60.0}, "2026-10-09": {"daily": 60, "sleep": 79, "rec": 40, "asleep": 482, "deep": 110, "rem": 118, "hrv": 41.5, "rhr": 63.0}, "2026-10-10": {"daily": 64, "sleep": 67, "rec": 61, "asleep": 476, "deep": 76, "rem": 130, "hrv": 49.5, "rhr": 63.0}, "2026-10-11": {"daily": 74, "sleep": 63, "rec": 85, "asleep": 398, "deep": 61, "rem": 81, "hrv": 79.5, "rhr": 61.0}, "2026-10-12": {"daily": 82, "sleep": 81, "rec": 82, "asleep": 442, "deep": 85, "rem": 141, "hrv": 62.9, "rhr": 60.0}, "2026-10-13": {"daily": 68, "sleep": 76, "rec": 61, "asleep": 505, "deep": 94, "rem": 116, "hrv": 47.8, "rhr": 62.0}, "2026-10-14": {"daily": 81, "sleep": 83, "rec": 79, "asleep": 444, "deep": 97, "rem": 100, "hrv": 63.8, "rhr": 62.0}, "2026-10-15": {"daily": 70, "sleep": 80, "rec": 59, "asleep": 438, "deep": 89, "rem": 118, "hrv": 47.5, "rhr": 62.0}, "2026-10-16": {"daily": 74, "sleep": 72, "rec": 76, "asleep": 454, "deep": 88, "rem": 127, "hrv": 60.8, "rhr": 62.0}, "2026-10-17": {"daily": 76, "sleep": 86, "rec": 51, "effort": 100, "asleep": 471, "deep": 94, "rem": 131, "hrv": 43.6, "rhr": 63.0, "steps": 5750.0, "load": 38}, "2026-10-18": {"daily": 54, "sleep": 81, "rec": 59, "effort": 0, "asleep": 445, "deep": 60, "rem": 137, "hrv": 45.7, "rhr": 63.0, "steps": 6207.0, "load": 0}, "2026-10-19": {"daily": 70, "sleep": 81, "rec": 72, "effort": 48, "asleep": 455, "deep": 102, "rem": 108, "hrv": 58.1, "rhr": 63.0, "steps": 5633.0, "load": 13}, "2026-10-20": {"daily": 54, "sleep": 85, "rec": 55, "effort": 0, "asleep": 457, "deep": 94, "rem": 126, "hrv": 46.0, "rhr": 63.0, "steps": 7683.0, "load": 2}, "2026-10-21": {"daily": 54, "sleep": 65, "rec": 74, "effort": 0, "asleep": 458, "deep": 100, "rem": 117, "hrv": 58.2, "rhr": 63.0, "steps": 2303.0, "load": 3}, "2026-10-22": {"daily": 70, "sleep": 74, "rec": 70, "effort": 63, "asleep": 453, "deep": 68, "rem": 99, "rhr": 63.0, "steps": 8621.0, "load": 15}, "2026-10-23": {"daily": 65, "sleep": 69, "rec": 63, "effort": 63, "asleep": 460, "deep": 94, "rem": 97, "hrv": 55.0, "rhr": 63.0, "steps": 18225.0, "load": 15, "wk": 7}, "2026-10-24": {"daily": 69, "sleep": 71, "rec": 49, "effort": 100, "asleep": 466, "deep": 73, "rem": 103, "hrv": 49.0, "rhr": 64.0, "steps": 17223.0, "load": 201, "wk": 3}, "2026-10-25": {"daily": 62, "sleep": 61, "rec": 40, "effort": 100, "asleep": 362, "deep": 103, "rem": 73, "hrv": 47.4, "rhr": 64.0, "steps": 12229.0, "load": 61, "wk": 2}, "2026-10-26": {"daily": 74, "sleep": 84, "rec": 64, "effort": 73, "asleep": 451, "deep": 64, "rem": 117, "hrv": 53.5, "rhr": 64.0, "steps": 5188.0, "load": 17, "wk": 2}, "2026-10-27": {"daily": 56, "sleep": 76, "rec": 67, "effort": 0, "asleep": 419, "deep": 94, "rem": 100, "hrv": 64.6, "rhr": 64.0, "steps": 12039.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 73, "sleep": 65, "rec": 79, "effort": 76, "asleep": 421, "deep": 75, "rem": 102, "hrv": 64.9, "rhr": 63.0, "steps": 8801.0, "load": 18, "wk": 2}, "2026-10-29": {"daily": 76, "rec": 63, "effort": 100, "hrv": 55.3, "rhr": 63.0, "steps": 16869.0, "load": 31, "wk": 3}, "2026-10-30": {"daily": 45, "rec": 70, "effort": 0, "rhr": 63.0, "steps": 1940.0, "load": 0}}, "base": {"dur": 451.5, "hrv": 55.0, "rhr": 63.0}}, "Brady": {"days": {"2026-10-01": {"daily": 54, "sleep": 84, "rec": 25, "asleep": 498, "deep": 68, "rem": 82, "hrv": 40.1, "rhr": 55.0}, "2026-10-02": {"daily": 69, "sleep": 82, "rec": 56, "asleep": 563, "deep": 58, "rem": 86, "hrv": 69.4, "rhr": 54.0}, "2026-10-03": {"daily": 70, "sleep": 64, "rec": 76, "asleep": 471, "deep": 67, "rem": 77, "hrv": 82.5, "rhr": 53.0}, "2026-10-04": {"daily": 63, "sleep": 90, "rec": 36, "asleep": 526, "deep": 69, "rem": 112, "hrv": 44.3, "rhr": 55.0}, "2026-10-05": {"daily": 70, "sleep": 60, "rec": 81, "asleep": 361, "deep": 75, "rem": 67, "hrv": 95.6, "rhr": 53.0}, "2026-10-06": {"daily": 52, "sleep": 68, "rec": 36, "asleep": 504, "deep": 100, "rem": 81, "hrv": 33.0, "rhr": 55.0}, "2026-10-07": {"daily": 57, "sleep": 73, "rec": 41, "asleep": 453, "deep": 63, "rem": 106, "hrv": 57.0, "rhr": 56.0}, "2026-10-08": {"daily": 81, "sleep": 80, "rec": 82, "asleep": 467, "deep": 73, "rem": 103, "hrv": 94.9, "rhr": 54.0}, "2026-10-09": {"daily": 66, "sleep": 71, "rec": 62, "asleep": 454, "deep": 71, "rem": 85, "hrv": 81.0, "rhr": 54.0}, "2026-10-10": {"daily": 65, "sleep": 68, "rec": 62, "asleep": 485, "deep": 60, "rem": 102, "hrv": 81.7, "rhr": 54.0}, "2026-10-11": {"daily": 70, "sleep": 84, "rec": 56, "asleep": 487, "deep": 83, "rem": 90, "hrv": 66.0, "rhr": 54.0}, "2026-10-12": {"daily": 67, "sleep": 71, "rec": 63, "asleep": 428, "deep": 67, "rem": 93, "hrv": 97.2, "rhr": 54.0}, "2026-10-13": {"daily": 81, "sleep": 78, "rec": 84, "asleep": 445, "deep": 68, "rem": 90, "hrv": 102.4, "rhr": 54.0}, "2026-10-14": {"daily": 70, "sleep": 58, "rec": 82, "asleep": 358, "deep": 59, "rem": 72, "hrv": 97.0, "rhr": 53.0}, "2026-10-15": {"daily": 75, "sleep": 87, "rec": 63, "asleep": 484, "deep": 77, "rem": 120, "hrv": 78.7, "rhr": 54.0}, "2026-10-16": {"daily": 62, "sleep": 53, "rec": 70, "asleep": 408, "deep": 75, "rem": 106, "hrv": 85.5, "rhr": 55.0}, "2026-10-17": {"daily": 68, "sleep": 88, "rec": 29, "effort": 100, "asleep": 582, "deep": 90, "rem": 164, "hrv": 37.4, "rhr": 57.0, "steps": 23383.0, "load": 217, "wk": 6}, "2026-10-18": {"daily": 37, "sleep": 60, "rec": 33, "effort": 3, "asleep": 395, "deep": 56, "rem": 64, "hrv": 36.0, "rhr": 58.0, "steps": 4029.0, "load": 3}, "2026-10-19": {"daily": 56, "sleep": 68, "rec": 76, "effort": 0, "asleep": 404, "deep": 67, "rem": 73, "hrv": 109.0, "rhr": 56.0, "steps": 7445.0, "load": 1}, "2026-10-20": {"daily": 79, "sleep": 71, "rec": 74, "effort": 100, "asleep": 445, "deep": 61, "rem": 90, "hrv": 89.2, "rhr": 56.0, "steps": 18595.0, "load": 45, "wk": 3}, "2026-10-21": {"daily": 48, "sleep": 75, "rec": 36, "effort": 20, "asleep": 438, "deep": 55, "rem": 104, "hrv": 60.0, "rhr": 57.0, "steps": 9020.0, "load": 4, "wk": 2}, "2026-10-22": {"daily": 67, "sleep": 74, "rec": 69, "effort": 53, "asleep": 475, "deep": 66, "rem": 101, "hrv": 83.4, "rhr": 55.0, "steps": 5580.0, "load": 6, "wk": 2}, "2026-10-23": {"daily": 83, "sleep": 66, "rec": 91, "effort": 100, "asleep": 436, "deep": 66, "rem": 92, "hrv": 129.1, "rhr": 55.0, "steps": 10120.0, "load": 13, "wk": 3}, "2026-10-24": {"daily": 55, "sleep": 76, "rec": 53, "effort": 20, "asleep": 472, "deep": 65, "rem": 88, "hrv": 64.7, "rhr": 55.0, "steps": 7167.0, "load": 4, "wk": 1}, "2026-10-25": {"daily": 59, "sleep": 79, "rec": 71, "effort": 3, "asleep": 480, "deep": 76, "rem": 88, "hrv": 81.6, "rhr": 55.0, "steps": 3771.0, "load": 3, "wk": 3}, "2026-10-26": {"daily": 66, "sleep": 48, "rec": 83, "effort": 70, "asleep": 336, "deep": 54, "rem": 65, "hrv": 93.8, "rhr": 54.0, "steps": 12240.0, "load": 7, "wk": 6}, "2026-10-27": {"daily": 51, "sleep": 69, "rec": 40, "effort": 37, "asleep": 434, "deep": 52, "rem": 88, "hrv": 59.9, "rhr": 55.0, "steps": 8216.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 79, "sleep": 70, "rec": 84, "effort": 84, "asleep": 431, "deep": 65, "rem": 60, "hrv": 93.0, "rhr": 53.0, "steps": 6293.0, "load": 9, "wk": 2}, "2026-10-29": {"daily": 93, "rec": 89, "effort": 100, "hrv": 105.8, "rhr": 53.0, "steps": 5782.0, "load": 19, "wk": 2}, "2026-10-30": {"daily": 86, "sleep": 78, "effort": 100, "asleep": 504, "deep": 66, "rem": 137, "steps": 22054.0, "load": 184, "wk": 8}}, "base": {"dur": 453.5, "hrv": 81.6, "rhr": 55.0}}, "Maleeya": {"days": {"2026-10-01": {"daily": 82, "sleep": 87, "rec": 76, "asleep": 542, "deep": 71, "rem": 148, "hrv": 125.2, "rhr": 53.0}, "2026-10-02": {"daily": 58, "sleep": 45, "rec": 71, "asleep": 405, "deep": 69, "rem": 84, "hrv": 114.0, "rhr": 53.0}, "2026-10-03": {"daily": 72, "sleep": 74, "rec": 69, "asleep": 449, "deep": 79, "rem": 120, "hrv": 103.7, "rhr": 52.0}, "2026-10-04": {"daily": 70, "rec": 70, "hrv": 127.7, "rhr": 51.0}, "2026-10-05": {"daily": 69, "sleep": 69, "asleep": 444, "deep": 8, "rem": 83}, "2026-10-06": {"daily": 39, "sleep": 65, "rec": 13, "asleep": 550, "deep": 44, "rem": 58, "hrv": 16.1, "rhr": 55.0}, "2026-10-07": {"daily": 36, "sleep": 71, "rec": 0, "asleep": 591, "deep": 60, "rem": 91, "hrv": 14.6, "rhr": 59.0}, "2026-10-08": {"daily": 26, "sleep": 41, "rec": 12, "asleep": 354, "deep": 45, "rem": 78, "hrv": 15.5, "rhr": 59.0}, "2026-10-09": {"daily": 46, "sleep": 72, "rec": 21, "asleep": 487, "deep": 77, "rem": 85, "hrv": 49.7, "rhr": 60.0}, "2026-10-10": {"daily": 62, "sleep": 69, "rec": 54, "asleep": 479, "deep": 55, "rem": 79, "hrv": 130.7, "rhr": 58.0}, "2026-10-11": {"daily": 74, "sleep": 77, "rec": 70, "asleep": 462, "deep": 77, "rem": 113, "hrv": 130.5, "rhr": 55.0}, "2026-10-12": {"daily": 79, "sleep": 72, "rec": 86, "asleep": 494, "deep": 56, "rem": 134, "hrv": 164.6, "rhr": 53.0}, "2026-10-13": {"daily": 68, "sleep": 69, "rec": 66, "asleep": 491, "deep": 18, "rem": 76, "hrv": 171.6, "rhr": 52.0}, "2026-10-14": {"daily": 79, "sleep": 77, "rec": 81, "asleep": 506, "deep": 79, "rem": 92, "hrv": 113.8, "rhr": 51.0}, "2026-10-15": {"daily": 76, "sleep": 66, "rec": 85, "asleep": 449, "deep": 50, "rem": 68, "hrv": 129.1, "rhr": 50.0}, "2026-10-16": {"daily": 83, "sleep": 80, "rec": 86, "asleep": 667, "deep": 84, "rem": 180, "hrv": 135.1, "rhr": 50.0}, "2026-10-17": {"daily": 62, "sleep": 81, "rec": 78, "effort": 0, "asleep": 504, "deep": 61, "rem": 110, "hrv": 118.6, "rhr": 50.0, "steps": 7453.0, "load": 0, "wk": 1}, "2026-10-18": {"daily": 78, "sleep": 82, "rec": 79, "effort": 71, "asleep": 496, "deep": 70, "rem": 116, "hrv": 110.3, "rhr": 49.0, "steps": 9557.0, "load": 155, "wk": 1}, "2026-10-19": {"daily": 63, "sleep": 78, "rec": 85, "effort": 0, "asleep": 482, "deep": 62, "rem": 93, "hrv": 125.7, "rhr": 49.0, "steps": 11070.0, "load": 21}, "2026-10-20": {"daily": 85, "sleep": 81, "rec": 86, "effort": 91, "asleep": 517, "deep": 67, "rem": 137, "hrv": 109.0, "rhr": 48.0, "steps": 15528.0, "load": 216, "wk": 4}, "2026-10-21": {"daily": 56, "sleep": 63, "rec": 68, "effort": 25, "asleep": 488, "deep": 60, "rem": 134, "hrv": 108.3, "rhr": 51.0, "steps": 11433.0, "load": 94, "wk": 4}, "2026-10-22": {"daily": 79, "sleep": 78, "rec": 67, "effort": 100, "asleep": 539, "deep": 102, "rem": 157, "hrv": 109.4, "rhr": 52.0, "steps": 23810.0, "load": 393, "wk": 3}, "2026-10-23": {"daily": 61, "sleep": 86, "rec": 70, "effort": 0, "asleep": 501, "deep": 90, "rem": 124, "hrv": 112.3, "rhr": 53.0, "steps": 6941.0, "load": 4, "wk": 1}, "2026-10-24": {"daily": 70, "sleep": 69, "rec": 67, "effort": 75, "asleep": 472, "deep": 94, "rem": 134, "hrv": 109.1, "rhr": 54.0, "steps": 8495.0, "load": 166, "wk": 2}, "2026-10-25": {"daily": 54, "sleep": 72, "rec": 67, "effort": 0, "asleep": 449, "deep": 100, "rem": 124, "hrv": 103.1, "rhr": 53.0, "steps": 4214.0, "load": 0}, "2026-10-26": {"daily": 47, "sleep": 71, "rec": 51, "effort": 0, "asleep": 447, "deep": 81, "rem": 101, "hrv": 101.1, "rhr": 54.0, "steps": 8866.0, "load": 22, "wk": 1}, "2026-10-27": {"daily": 72, "sleep": 78, "rec": 68, "effort": 70, "asleep": 474, "deep": 88, "rem": 119, "hrv": 97.9, "rhr": 53.0, "steps": 13931.0, "load": 152, "wk": 2}, "2026-10-28": {"daily": 56, "sleep": 70, "rec": 58, "effort": 27, "asleep": 466, "deep": 84, "rem": 126, "hrv": 109.0, "rhr": 54.0, "steps": 12762.0, "load": 96, "wk": 3}, "2026-10-29": {"daily": 73, "rec": 58, "effort": 100, "hrv": 113.8, "rhr": 54.0, "steps": 24827.0, "load": 409, "wk": 5}, "2026-10-30": {"effort": 0, "steps": 7691.0, "load": 0}}, "base": {"dur": 484.5, "hrv": 111.3, "rhr": 53.0}}, "Ella": {"days": {"2026-10-01": {"daily": 70, "sleep": 75, "rec": 66, "asleep": 429, "deep": 66, "rem": 65, "hrv": 113.7, "rhr": 57.0}, "2026-10-02": {"daily": 72, "sleep": 74, "rec": 70, "asleep": 491, "deep": 52, "rem": 97, "hrv": 121.8, "rhr": 59.0}, "2026-10-03": {"daily": 70, "sleep": 62, "rec": 78, "asleep": 469, "deep": 47, "rem": 75, "hrv": 130.8, "rhr": 59.0}, "2026-10-04": {"daily": 74, "sleep": 74, "rec": 75, "asleep": 495, "deep": 84, "rem": 82, "hrv": 121.6, "rhr": 59.0}, "2026-10-05": {"daily": 76, "sleep": 78, "rec": 75, "asleep": 440, "deep": 63, "rem": 88, "hrv": 131.8, "rhr": 58.0}, "2026-10-06": {"daily": 78, "sleep": 87, "rec": 69, "asleep": 521, "deep": 64, "rem": 82, "hrv": 131.9, "rhr": 57.0}, "2026-10-07": {"daily": 79, "sleep": 76, "rec": 83, "asleep": 452, "deep": 48, "rem": 73, "hrv": 131.9, "rhr": 57.0}, "2026-10-08": {"daily": 65, "sleep": 63, "rec": 67, "asleep": 383, "deep": 54, "rem": 76, "hrv": 112.4, "rhr": 56.0}, "2026-10-09": {"daily": 76, "sleep": 74, "rec": 79, "asleep": 453, "deep": 64, "rem": 71, "hrv": 112.8, "rhr": 56.0}, "2026-10-10": {"daily": 72, "sleep": 82, "rec": 61, "asleep": 553, "deep": 86, "rem": 117, "hrv": 94.2, "rhr": 56.0}, "2026-10-11": {"daily": 54, "sleep": 44, "rec": 64, "asleep": 277, "deep": 48, "rem": 33, "hrv": 96.7, "rhr": 56.0}, "2026-10-12": {"daily": 59, "sleep": 70, "rec": 47, "asleep": 551, "deep": 46, "rem": 88, "hrv": 89.9, "rhr": 57.0}, "2026-10-13": {"daily": 57, "sleep": 62, "rec": 52, "asleep": 412, "deep": 51, "rem": 85, "hrv": 96.3, "rhr": 57.0}, "2026-10-14": {"daily": 78, "sleep": 83, "rec": 72, "asleep": 455, "deep": 69, "rem": 90, "hrv": 111.8, "rhr": 59.0}, "2026-10-15": {"daily": 64, "sleep": 68, "rec": 59, "asleep": 410, "deep": 57, "rem": 70, "hrv": 104.5, "rhr": 61.0}, "2026-10-16": {"daily": 68, "sleep": 77, "rec": 59, "asleep": 633, "deep": 56, "rem": 109, "hrv": 122.9, "rhr": 61.0}, "2026-10-17": {"daily": 77, "sleep": 77, "rec": 64, "effort": 100, "asleep": 513, "deep": 83, "rem": 76, "hrv": 115.2, "rhr": 61.0, "steps": 12949.0, "load": 116, "wk": 3}, "2026-10-18": {"daily": 73, "sleep": 69, "rec": 62, "effort": 100, "asleep": 538, "deep": 66, "rem": 63, "hrv": 115.1, "rhr": 62.0, "steps": 11691.0, "load": 72, "wk": 2}, "2026-10-19": {"daily": 59, "sleep": 74, "rec": 73, "effort": 7, "asleep": 481, "deep": 51, "rem": 92, "hrv": 136.9, "rhr": 61.0, "steps": 13392.0, "load": 15, "wk": 2}, "2026-10-20": {"daily": 73, "sleep": 64, "rec": 66, "effort": 100, "asleep": 406, "deep": 83, "rem": 87, "hrv": 122.1, "rhr": 61.0, "steps": 15816.0, "load": 124, "wk": 3}, "2026-10-21": {"daily": 48, "sleep": 88, "rec": 36, "effort": 0, "asleep": 512, "deep": 70, "rem": 105, "hrv": 83.0, "rhr": 62.0, "steps": 13103.0, "load": 5, "wk": 2}, "2026-10-22": {"daily": 70, "sleep": 64, "rec": 58, "effort": 100, "asleep": 422, "deep": 70, "rem": 57, "hrv": 111.2, "rhr": 61.0, "steps": 9863.0, "load": 126, "wk": 3}, "2026-10-23": {"daily": 41, "sleep": 76, "rec": 30, "effort": 0, "asleep": 507, "deep": 83, "rem": 72, "hrv": 80.3, "rhr": 63.0, "steps": 14991.0, "load": 13, "wk": 2}, "2026-10-24": {"daily": 56, "sleep": 82, "rec": 31, "effort": 54, "asleep": 586, "deep": 25, "rem": 62, "hrv": 96.2, "rhr": 63.0, "steps": 10469.0, "load": 28, "wk": 4}, "2026-10-25": {"daily": 75, "sleep": 83, "rec": 52, "effort": 100, "asleep": 495, "deep": 68, "rem": 81, "hrv": 112.5, "rhr": 62.0, "steps": 12150.0, "load": 106, "wk": 3}, "2026-10-26": {"daily": 62, "sleep": 50, "rec": 53, "effort": 100, "asleep": 380, "deep": 35, "rem": 38, "hrv": 105.6, "rhr": 61.0, "steps": 9708.0, "load": 103, "wk": 3}, "2026-10-27": {"daily": 55, "sleep": 76, "rec": 66, "effort": 0, "asleep": 466, "deep": 62, "rem": 59, "hrv": 112.8, "rhr": 60.0, "steps": 11546.0, "load": 0, "wk": 3}, "2026-10-28": {"daily": 42, "sleep": 50, "rec": 58, "effort": 0, "asleep": 343, "deep": 63, "rem": 51, "hrv": 111.5, "rhr": 57.0, "steps": 13883.0, "load": 7, "wk": 5}, "2026-10-29": {"daily": 64, "sleep": 59, "rec": 82, "effort": 43, "asleep": 401, "deep": 67, "rem": 30, "hrv": 134.4, "rhr": 56.0, "steps": 26576.0, "load": 25, "wk": 8}, "2026-10-30": {"daily": 52, "sleep": 79, "rec": 55, "effort": 0, "asleep": 448, "deep": 80, "rem": 58, "hrv": 100.2, "rhr": 57.0, "steps": 11747.0, "load": 4, "wk": 3}}, "base": {"dur": 455.0, "hrv": 112.8, "rhr": 59.0}}, "Regina": {"days": {"2026-10-01": {"daily": 56, "sleep": 66, "rec": 46, "asleep": 343, "deep": 91, "rem": 105, "hrv": 16.8}, "2026-10-02": {"daily": 62, "sleep": 70, "rec": 54, "asleep": 344, "deep": 84, "rem": 78, "hrv": 17.6}, "2026-10-03": {"daily": 60, "sleep": 73, "rec": 48, "asleep": 382, "deep": 114, "rem": 101, "hrv": 20.7, "rhr": 62.0}, "2026-10-04": {"daily": 66, "sleep": 80, "rec": 51, "asleep": 375, "deep": 67, "rem": 53, "hrv": 18.0, "rhr": 63.0}, "2026-10-05": {"daily": 67, "sleep": 76, "rec": 58, "asleep": 399, "deep": 96, "rem": 97, "hrv": 19.1, "rhr": 65.0}, "2026-10-06": {"daily": 34, "rec": 34, "hrv": 18.2, "rhr": 67.0}, "2026-10-07": {"daily": 87, "sleep": 87, "asleep": 434, "deep": 93, "rem": 82}, "2026-10-08": {"daily": 46, "sleep": 66, "rec": 27, "asleep": 344, "deep": 80, "rem": 72, "hrv": 16.5, "rhr": 67.0}, "2026-10-09": {"daily": 55, "sleep": 74, "rec": 36, "asleep": 366, "deep": 78, "rem": 88, "hrv": 19.6, "rhr": 67.0}, "2026-10-10": {"daily": 54, "sleep": 76, "rec": 31, "asleep": 476, "deep": 84, "rem": 134, "hrv": 20.3, "rhr": 67.0}, "2026-10-11": {"daily": 52, "rec": 52, "hrv": 26.4, "rhr": 65.0}, "2026-10-12": {"daily": 70, "sleep": 74, "rec": 67, "asleep": 456, "deep": 68, "rem": 114, "rhr": 64.0}, "2026-10-13": {"daily": 76, "sleep": 96, "rec": 56, "asleep": 481, "deep": 76, "rem": 134, "hrv": 22.3, "rhr": 62.0}, "2026-10-14": {"daily": 82, "sleep": 89, "rec": 74, "asleep": 458, "deep": 91, "rem": 88, "hrv": 27.2, "rhr": 62.0}, "2026-10-15": {"daily": 63, "sleep": 51, "rec": 74, "asleep": 348, "deep": 42, "rem": 99, "hrv": 22.5, "rhr": 62.0}, "2026-10-16": {"daily": 80, "sleep": 85, "rec": 76, "asleep": 482, "deep": 80, "rem": 157, "hrv": 21.5, "rhr": 62.0}, "2026-10-17": {"daily": 72, "sleep": 52, "rec": 76, "effort": 100, "asleep": 325, "deep": 65, "rem": 89, "hrv": 22.8, "rhr": 62.0, "steps": 8145.0, "load": 29}, "2026-10-18": {"daily": 60, "sleep": 77, "rec": 78, "effort": 0, "asleep": 379, "deep": 88, "rem": 115, "hrv": 21.0, "rhr": 62.0, "steps": 9012.0, "load": 1}, "2026-10-19": {"daily": 37, "sleep": 26, "rec": 69, "effort": 0, "asleep": 173, "deep": 15, "rem": 77, "hrv": 22.4, "rhr": 62.0, "steps": 8051.0, "load": 2}, "2026-10-20": {"daily": 69, "rec": 82, "effort": 47, "hrv": 23.7, "rhr": 62.0, "steps": 11360.0, "load": 4}, "2026-10-21": {"effort": 100, "steps": 2879.0, "load": 8}, "2026-10-22": {"daily": 53, "sleep": 84, "effort": 0, "asleep": 424, "deep": 65, "rem": 95, "steps": 437.0, "load": 0}, "2026-10-23": {"daily": 80, "sleep": 71, "rec": 78, "effort": 100, "asleep": 420, "deep": 55, "rem": 76, "hrv": 24.6, "rhr": 63.0, "steps": 20553.0, "load": 92, "wk": 7}, "2026-10-24": {"daily": 59, "sleep": 92, "rec": 59, "effort": 0, "asleep": 464, "deep": 72, "rem": 141, "hrv": 20.6, "rhr": 64.0, "steps": 8687.0, "load": 0, "wk": 1}, "2026-10-25": {"daily": 73, "sleep": 70, "rec": 78, "effort": 70, "asleep": 345, "deep": 52, "rem": 117, "hrv": 24.6, "rhr": 63.0, "steps": 7271.0, "load": 5, "wk": 2}, "2026-10-26": {"daily": 57, "sleep": 67, "rec": 80, "effort": 0, "asleep": 349, "deep": 91, "rem": 94, "hrv": 22.4, "rhr": 63.0, "steps": 8249.0, "load": 1}, "2026-10-27": {"daily": 47, "sleep": 36, "rec": 85, "effort": 0, "asleep": 265, "deep": 65, "rem": 56, "hrv": 24.6, "rhr": 62.0, "steps": 7823.0, "load": 0, "wk": 1}, "2026-10-28": {"daily": 46, "rec": 72, "effort": 0, "hrv": 22.4, "steps": 89.0, "load": 0}, "2026-10-29": {"daily": 83, "sleep": 84, "rec": 71, "effort": 100, "asleep": 383, "deep": 73, "rem": 103, "rhr": 62.0, "steps": 6537.0, "load": 9, "wk": 2}, "2026-10-30": {"daily": 77, "sleep": 74, "rec": 66, "effort": 100, "asleep": 379, "deep": 74, "rem": 77, "hrv": 19.9, "rhr": 63.0, "steps": 9343.0, "load": 11, "wk": 1}}, "base": {"dur": 379.0, "hrv": 21.3, "rhr": 63.0}}, "Ted": {"days": {"2026-10-17": {"steps": 5656.0}, "2026-10-18": {"daily": 84, "sleep": 86, "rec": 74, "effort": 100, "asleep": 372, "deep": 65, "rem": 92, "rhr": 49.0, "steps": 19403.0, "load": 229, "wk": 3}, "2026-10-19": {"daily": 75, "sleep": 82, "rec": 69, "effort": 74, "asleep": 344, "deep": 60, "rem": 65, "hrv": 36.0, "rhr": 50.0, "steps": 13292.0, "load": 137, "wk": 1}, "2026-10-20": {"daily": 73, "sleep": 79, "rec": 68, "effort": 71, "asleep": 337, "deep": 68, "rem": 88, "hrv": 37.4, "rhr": 51.0, "steps": 14786.0, "load": 129, "wk": 1}, "2026-10-21": {"daily": 72, "sleep": 84, "rec": 74, "effort": 49, "asleep": 356, "deep": 67, "rem": 62, "hrv": 38.1, "rhr": 51.0, "steps": 14961.0, "load": 103, "wk": 1}, "2026-10-22": {"daily": 68, "sleep": 67, "rec": 67, "effort": 71, "asleep": 296, "deep": 52, "rem": 64, "hrv": 41.9, "rhr": 52.0, "steps": 14724.0, "load": 128, "wk": 1}, "2026-10-23": {"daily": 51, "sleep": 92, "rec": 39, "effort": 0, "asleep": 426, "deep": 103, "rem": 110, "hrv": 36.4, "rhr": 52.0, "steps": 22102.0, "load": 16, "wk": 7}, "2026-10-24": {"daily": 63, "sleep": 55, "rec": 66, "effort": 72, "asleep": 311, "deep": 76, "rem": 80, "hrv": 40.7, "rhr": 51.0, "steps": 10525.0, "load": 131, "wk": 3}, "2026-10-25": {"daily": 63, "sleep": 83, "rec": 61, "effort": 33, "asleep": 351, "deep": 75, "rem": 93, "hrv": 38.7, "rhr": 51.0, "steps": 11665.0, "load": 86, "wk": 2}, "2026-10-26": {"daily": 78, "sleep": 74, "rec": 82, "effort": 79, "asleep": 310, "deep": 67, "rem": 68, "hrv": 46.3, "rhr": 51.0, "steps": 14075.0, "load": 148, "wk": 1}, "2026-10-27": {"daily": 69, "sleep": 52, "rec": 81, "effort": 77, "asleep": 317, "deep": 83, "rem": 59, "hrv": 44.0, "rhr": 50.0, "steps": 19179.0, "load": 143}, "2026-10-28": {"daily": 43, "sleep": 32, "rec": 76, "effort": 6, "asleep": 239, "deep": 52, "rem": 52, "hrv": 38.7, "rhr": 51.0, "steps": 14706.0, "load": 57, "wk": 2}, "2026-10-29": {"daily": 57, "rec": 50, "effort": 68, "hrv": 37.5, "rhr": 51.0, "steps": 17492.0, "load": 124, "wk": 1}, "2026-10-30": {"daily": 73, "sleep": 82, "rec": 66, "effort": 68, "asleep": 344, "deep": 63, "rem": 89, "rhr": 52.0, "steps": 16106.0, "load": 124, "wk": 1}}, "base": {"dur": 340.5, "hrv": 38.7, "rhr": 51.0}}}}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('data').textContent);
+const H = D.history || {};
+const KEY = 'sleepboard_me';
+let me = null; try { me = localStorage.getItem(KEY); } catch(e) {}
+const names = Array.from(new Set([].concat(Object.keys(H), (D.detail||[]).map(x=>x.name), (D.sleep||[]).map(x=>x.name)))).sort();
+if (me && !names.includes(me)) me = null;
+let view = me;
+
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const band = v => v==null ? 'var(--faint)' : v>=67 ? 'var(--green)' : v>=34 ? 'var(--amber)' : 'var(--red)';
+const hm = m => m==null ? '' : Math.floor(m/60)+'h '+String(Math.round(m%60)).padStart(2,'0')+'m';
+const ord = n => { const s=['th','st','nd','rd'], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
+const iso = d => d.toISOString().slice(0,10);
+const addDays = (s,n) => { const d=new Date(s+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return iso(d); };
+const DAY = D.day_iso || (()=>{ let best=null; for (const n in H) for (const k in H[n].days) if(!best||k>best) best=k; return best; })();
+const TODAY = DAY ? addDays(DAY,1) : null;
+const rec = (n,k) => (H[n] && H[n].days[k]) || {};
+const detailOf = n => (D.detail||[]).find(x=>x.name===n);
+const nameBtn = n => '<button class="nmb" data-view="'+esc(n)+'">'+esc(n)+'</button>';
+
+/* ---------- matchups ---------- */
+function pairings(dayIso){
+  const list = names.slice();
+  if (list.length < 2) return {pairs:[], bye:null};
+  if (list.length % 2) list.push(null);
+  const m = list.length, rounds = m - 1;
+  const idx = Math.round((Date.parse(dayIso+'T12:00:00Z') - Date.parse('2026-01-01T12:00:00Z'))/864e5);
+  const r = ((idx % rounds) + rounds) % rounds;
+  const rest = list.slice(1);
+  const rot = rest.slice(r).concat(rest.slice(0,r));
+  const arr = [list[0]].concat(rot);
+  const pairs=[]; let bye=null;
+  for (let i=0;i<m/2;i++){
+    const a=arr[i], b=arr[m-1-i];
+    if (a===null) bye=b; else if (b===null) bye=a; else pairs.push([a,b]);
+  }
+  return {pairs, bye};
 }
-.stamp { color: var(--muted); font-size: 0.85rem; margin: 0 0 30px; }
-h2 {
-  font-family: 'Instrument Serif', Georgia, serif;
-  font-weight: 400; font-size: 1.5rem; margin: 40px 0 4px;
+function result(a,b,k){
+  const sa = rec(a,k).daily, sb = rec(b,k).daily;
+  if (sa==null && sb==null) return null;
+  if (sb==null) return {w:a,l:b,sa,sb};
+  if (sa==null) return {w:b,l:a,sa,sb};
+  if (sa===sb) return {tie:true,sa,sb};
+  return sa>sb ? {w:a,l:b,sa,sb} : {w:b,l:a,sa,sb};
 }
-.note { color: var(--muted); font-size: 0.85rem; margin: 0 0 16px; }
-.row { padding: 11px 0; border-bottom: 1px solid var(--line); }
-.row:last-child { border-bottom: 0; }
-.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.who { font-weight: 500; }
-.big { font-weight: 600; }
-.dim { color: var(--muted); font-weight: 400; }
-.track {
-  height: 9px; margin: 8px 0 6px; border-radius: 5px;
-  background: var(--track); overflow: hidden;
+function record(){
+  const t={}; names.forEach(n=>t[n]={w:0,l:0,t:0});
+  if (!DAY) return t;
+  for (let i=0;i<30;i++){
+    const k = addDays(DAY,-i);
+    pairings(k).pairs.forEach(([a,b])=>{
+      const r=result(a,b,k); if(!r) return;
+      if (r.tie){ t[a].t++; t[b].t++; } else { t[r.w].w++; t[r.l].l++; }
+    });
+  }
+  return t;
 }
-.fill { height: 100%; background: var(--teal); border-radius: 5px; }
-.meta { color: var(--muted); font-size: 0.85rem; display: flex; gap: 18px; flex-wrap: wrap; }
-.cat { margin: 0 0 20px; }
-.cat h3 { font-size: 0.98rem; font-weight: 600; margin: 0 0 6px; }
-.cat.pen h3 { color: var(--muted); }
-.ranks { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.92rem; }
-.rk { color: var(--muted); }
-.lead .v { color: var(--brass); font-weight: 600; }
-.pts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0 0 6px; }
-.pts .v { font-weight: 600; }
-.pts .first .v { color: var(--brass); }
-.empty { color: var(--muted); font-style: italic; }
-.person { padding: 20px 0; border-bottom: 1px solid var(--line); }
-.phead { display: flex; align-items: baseline; gap: 10px; }
-.phead .nm { font-weight: 600; font-size: 1.08rem; }
-.phead .pos { color: var(--muted); font-size: 0.84rem; }
-.scores { display: flex; gap: 28px; margin: 12px 0 2px; }
-.sc .n { font-size: 1.5rem; font-weight: 600; line-height: 1.1; }
-.sc .l { color: var(--muted); font-size: 0.78rem; }
-.parts { margin: 14px 0 0; }
-.parts .ph { font-weight: 600; font-size: 0.88rem; margin: 12px 0 2px; }
-.parts .pr { display: flex; justify-content: space-between; gap: 16px;
-             padding: 3px 0; font-size: 0.9rem; }
-.parts .pr span:last-child { color: var(--muted); text-align: right; }
-.trend { display: flex; align-items: flex-end; gap: 4px;
-         height: 32px; margin: 14px 0 4px; }
-.trend i { flex: 1; display: block; background: var(--track); border-radius: 2px; }
-.trend i.on { background: var(--teal); }
-.tlab { color: var(--muted); font-size: 0.78rem; }
-footer { margin-top: 46px; color: var(--muted); font-size: 0.8rem; }
-</style></head><body><h1>Friday, October 30</h1><p class="stamp">Last night, refreshed 7:26pm Eastern</p><div class="row"><div class="top"><span class="who">Brady</span><span class="big">8h 24m</span></div><div class="track"><div class="fill" style="width:93%"></div></div><div class="meta"><span>sleep score 78</span><span>93% efficient</span></div></div><div class="row"><div class="top"><span class="who">Ella</span><span class="big">7h 28m</span></div><div class="track"><div class="fill" style="width:83%"></div></div><div class="meta"><span>sleep score 79</span><span>85% efficient</span></div></div><div class="row"><div class="top"><span class="who">Regina</span><span class="big">6h 19m</span></div><div class="track"><div class="fill" style="width:70%"></div></div><div class="meta"><span>sleep score 74</span><span>93% efficient</span></div></div><div class="row"><div class="top"><span class="who">Ted</span><span class="big">5h 44m</span></div><div class="track"><div class="fill" style="width:64%"></div></div><div class="meta"><span>sleep score 82</span><span>93% efficient</span></div></div><div class="row"><div class="top"><span class="who">Luke</span><span class="dim">no data</span></div><div class="track"><div class="fill" style="width:0%"></div></div><div class="meta"></div></div><div class="row"><div class="top"><span class="who">Maleeya</span><span class="dim">no data</span></div><div class="track"><div class="fill" style="width:0%"></div></div><div class="meta"></div></div><h2>Today so far</h2><p class="note">Still counting. No scores until the day is done.</p><div class="row"><div class="top"><span class="who">Brady</span></div><div class="meta"><span>13,599 steps</span><span>cardio load 68</span><span>4 workouts</span></div></div><div class="row"><div class="top"><span class="who">Ted</span></div><div class="meta"><span>12,968 steps</span><span>cardio load 77</span><span>2 workouts</span></div></div><div class="row"><div class="top"><span class="who">Ella</span></div><div class="meta"><span>10,874 steps</span><span>cardio load 37</span><span>3 workouts</span></div></div><div class="row"><div class="top"><span class="who">Regina</span></div><div class="meta"><span>8,893 steps</span><span>cardio load 5</span><span>2 workouts</span></div></div><div class="row"><div class="top"><span class="who">Maleeya</span></div><div class="meta"><span>3,047 steps</span></div></div><div class="row"><div class="top"><span class="who">Luke</span></div><div class="meta"><span>1,612 steps</span></div></div><h2>This week</h2><div class="pts"><span class="first"><span>Brady</span> <span class="v">72.2</span></span><span class=""><span>Maleeya</span> <span class="v">67.7</span></span><span class=""><span>Luke</span> <span class="v">52.7</span></span><span class=""><span>Ella</span> <span class="v">43.7</span></span><span class=""><span>Regina</span> <span class="v">39.2</span></span><span class=""><span>Ted</span> <span class="v">35.7</span></span></div><p class="note">Points so far, day 6 of 7. Nothing is final until Saturday night.</p><div class="cat"><h3>Sleep Score</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Maleeya <span class="v">73 avg  (4 nights)</span></span><span class=""><span class="rk">2</span> Luke <span class="v">72 avg  (4 nights)</span></span><span class=""><span class="rk">3</span> Brady <span class="v">69 avg  (5 nights)</span></span><span class=""><span class="rk">4</span> Regina <span class="v">66 avg  (5 nights)</span></span><span class=""><span class="rk">5</span> Ella <span class="v">66 avg  (6 nights)</span></span><span class=""><span class="rk">6</span> Ted <span class="v">65 avg  (5 nights)</span></span></div></div><div class="cat"><h3>Recovery</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Regina <span class="v">75 avg</span></span><span class=""><span class="rk">2</span> Brady <span class="v">73 avg</span></span><span class=""><span class="rk">3</span> Ted <span class="v">69 avg</span></span><span class=""><span class="rk">4</span> Luke <span class="v">64 avg</span></span><span class=""><span class="rk">5</span> Ella <span class="v">61 avg</span></span><span class=""><span class="rk">6</span> Maleeya <span class="v">60 avg</span></span></div></div><div class="cat"><h3>Effort</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Brady <span class="v">66 vs your normal</span></span><span class=""><span class="rk">2</span> Luke <span class="v">58 vs your normal</span></span><span class=""><span class="rk">3</span> Ted <span class="v">55 vs your normal</span></span><span class=""><span class="rk">4</span> Regina <span class="v">45 vs your normal</span></span><span class=""><span class="rk">5</span> Ella <span class="v">40 vs your normal</span></span><span class=""><span class="rk">6</span> Maleeya <span class="v">33 vs your normal</span></span></div></div><div class="cat"><h3>Restorative sleep</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Maleeya <span class="v">13h 43m deep+REM</span></span><span class=""><span class="rk">2</span> Regina <span class="v">13h 22m deep+REM</span></span><span class=""><span class="rk">3</span> Brady <span class="v">12h 31m deep+REM</span></span><span class=""><span class="rk">4</span> Luke <span class="v">12h 08m deep+REM</span></span><span class=""><span class="rk">5</span> Ted <span class="v">11h 41m deep+REM</span></span><span class=""><span class="rk">6</span> Ella <span class="v">11h 32m deep+REM</span></span></div></div><div class="cat"><h3>Steps</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Ted <span class="v">93,223 steps</span></span><span class=""><span class="rk">2</span> Ella <span class="v">85,610 steps</span></span><span class=""><span class="rk">3</span> Maleeya <span class="v">72,291 steps</span></span><span class=""><span class="rk">4</span> Brady <span class="v">58,356 steps</span></span><span class=""><span class="rk">5</span> Luke <span class="v">57,066 steps</span></span><span class=""><span class="rk">6</span> Regina <span class="v">39,312 steps</span></span></div></div><div class="cat"><h3>Cardio load</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Ted <span class="v">682 load</span></span><span class=""><span class="rk">2</span> Maleeya <span class="v">679 load</span></span><span class=""><span class="rk">3</span> Ella <span class="v">245 load</span></span><span class=""><span class="rk">4</span> Brady <span class="v">227 load</span></span><span class=""><span class="rk">5</span> Luke <span class="v">132 load</span></span><span class=""><span class="rk">6</span> Regina <span class="v">26 load</span></span></div></div><div class="cat"><h3>Workouts</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Ella <span class="v">25 sessions</span></span><span class=""><span class="rk">2</span> Brady <span class="v">22 sessions</span></span><span class=""><span class="rk">3</span> Maleeya <span class="v">11 sessions</span></span><span class=""><span class="rk">4</span> Luke <span class="v">10 sessions</span></span><span class=""><span class="rk">5</span> Ted <span class="v">7 sessions</span></span><span class=""><span class="rk">6</span> Regina <span class="v">6 sessions</span></span></div></div><div class="cat"><h3>Perfect days</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Brady <span class="v">4 of 7</span></span><span class=""><span class="rk">2</span> Maleeya <span class="v">3 of 7</span></span><span class=""><span class="rk">3</span> Ella <span class="v">3 of 7</span></span><span class=""><span class="rk">4</span> Luke <span class="v">2 of 7</span></span></div></div><div class="cat"><h3>Most consistent</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Maleeya <span class="v">12 min typical swing</span></span><span class=""><span class="rk">2</span> Luke <span class="v">27 min typical swing</span></span><span class=""><span class="rk">3</span> Ella <span class="v">40 min typical swing</span></span><span class=""><span class="rk">4</span> Brady <span class="v">46 min typical swing</span></span><span class=""><span class="rk">5</span> Regina <span class="v">48 min typical swing</span></span><span class=""><span class="rk">6</span> Ted <span class="v">57 min typical swing</span></span></div></div><div class="cat"><h3>Most improved</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Brady <span class="v">+11.6 vs last week</span></span><span class=""><span class="rk">2</span> Regina <span class="v">+4.2 vs last week</span></span><span class=""><span class="rk">3</span> Luke <span class="v">+2.0 vs last week</span></span><span class=""><span class="rk">4</span> Ella <span class="v">-1.7 vs last week</span></span><span class=""><span class="rk">5</span> Ted <span class="v">-5.6 vs last week</span></span><span class=""><span class="rk">6</span> Maleeya <span class="v">-9.9 vs last week</span></span></div></div><div class="cat"><h3>Workout time</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Brady <span class="v">9h 57m total</span></span><span class=""><span class="rk">2</span> Ella <span class="v">9h 03m total</span></span><span class=""><span class="rk">3</span> Maleeya <span class="v">8h 22m total</span></span><span class=""><span class="rk">4</span> Luke <span class="v">6h 25m total</span></span><span class=""><span class="rk">5</span> Ted <span class="v">6h 09m total</span></span><span class=""><span class="rk">6</span> Regina <span class="v">1h 53m total</span></span></div></div><div class="cat"><h3>Wear streak</h3><div class="ranks"><span class="lead"><span class="rk">1</span> Luke <span class="v">6 day streak</span></span><span class=""><span class="rk">2</span> Brady <span class="v">6 day streak</span></span><span class=""><span class="rk">3</span> Maleeya <span class="v">6 day streak</span></span><span class=""><span class="rk">4</span> Ella <span class="v">6 day streak</span></span><span class=""><span class="rk">5</span> Regina <span class="v">6 day streak</span></span><span class=""><span class="rk">6</span> Ted <span class="v">6 day streak</span></span></div></div><div class="cat pen"><h3>Couch of the week</h3><div class="ranks"><span class="empty">Nobody scored.</span></div></div><div class="cat pen"><h3>Longest sit</h3><div class="ranks"><span class=""><span class="rk">1</span> Brady <span class="v">293 min without moving</span></span><span class=""><span class="rk">2</span> Regina <span class="v">193 min without moving</span></span><span class=""><span class="rk">3</span> Ted <span class="v">243 min without moving</span></span><span class=""><span class="rk">4</span> Ella <span class="v">258 min without moving</span></span><span class=""><span class="rk">5</span> Luke <span class="v">176 min without moving</span></span><span class=""><span class="rk">6</span> Maleeya <span class="v">187 min without moving</span></span></div></div><h2>Everyone in detail</h2><p class="note">Yesterday in full, ranked by daily score.</p><div class="person"><div class="phead"><span class="nm">Brady</span><span class="pos">1 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">86</div><div class="l">day</div></div><div class="sc"><div class="n">78</div><div class="l">sleep</div></div><div class="sc"><div class="n">&mdash;</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:55%"></i><i class="on" style="height:59%"></i><i class="on" style="height:66%"></i><i class="on" style="height:51%"></i><i class="on" style="height:79%"></i><i class="on" style="height:93%"></i><i class="on" style="height:86%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Sleep</div><div class="pr"><span>Duration</span><span>8h 24m asleep vs 7h 33m, your usual</span></div><div class="pr"><span>Efficiency</span><span>93% of time in bed asleep (85% is already good)</span></div><div class="pr"><span>Deep+REM</span><span>1h 06m deep + 2h 17m REM = 40% of sleep</span></div><div class="pr"><span>Falling asleep</span><span>0 min to fall asleep, which usually means sleep debt</span></div><div class="pr"><span>Regularity</span><span>50 min from your usual bedtime</span></div><div class="ph">Recovery</div><div class="pr"><span>HRV</span><span>no reading</span></div><div class="pr"><span>Resting HR</span><span>no reading</span></div><div class="pr"><span>Breathing</span><span>no reading</span></div><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>22,054</span></div><div class="pr"><span>Cardio load</span><span>184</span></div><div class="pr"><span>Workouts</span><span>8</span></div></div></div><div class="person"><div class="phead"><span class="nm">Regina</span><span class="pos">2 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">77</div><div class="l">day</div></div><div class="sc"><div class="n">74</div><div class="l">sleep</div></div><div class="sc"><div class="n">66</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:59%"></i><i class="on" style="height:73%"></i><i class="on" style="height:57%"></i><i class="on" style="height:47%"></i><i class="on" style="height:46%"></i><i class="on" style="height:83%"></i><i class="on" style="height:77%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Sleep</div><div class="pr"><span>Duration</span><span>6h 19m asleep vs 6h 19m, your usual</span></div><div class="pr"><span>Efficiency</span><span>93% of time in bed asleep (85% is already good)</span></div><div class="pr"><span>Deep+REM</span><span>1h 14m deep + 1h 17m REM = 40% of sleep</span></div><div class="pr"><span>Falling asleep</span><span>0 min to fall asleep, which usually means sleep debt</span></div><div class="pr"><span>Regularity</span><span>46 min from your usual bedtime</span></div><div class="ph">Recovery</div><div class="pr"><span>HRV</span><span>20ms vs 21 baseline (-7%, normal)</span></div><div class="pr"><span>Resting HR</span><span>63 bpm vs 63 baseline (+0%, strong)</span></div><div class="pr"><span>Breathing</span><span>11.6 br/min vs 11.8 baseline (-2%, strong)</span></div><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>9,343</span></div><div class="pr"><span>Cardio load</span><span>11</span></div><div class="pr"><span>Workouts</span><span>1</span></div></div></div><div class="person"><div class="phead"><span class="nm">Ted</span><span class="pos">3 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">73</div><div class="l">day</div></div><div class="sc"><div class="n">82</div><div class="l">sleep</div></div><div class="sc"><div class="n">66</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:63%"></i><i class="on" style="height:63%"></i><i class="on" style="height:78%"></i><i class="on" style="height:69%"></i><i class="on" style="height:43%"></i><i class="on" style="height:57%"></i><i class="on" style="height:73%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Sleep</div><div class="pr"><span>Duration</span><span>5h 44m asleep vs 5h 40m, your usual</span></div><div class="pr"><span>Efficiency</span><span>93% of time in bed asleep (85% is already good)</span></div><div class="pr"><span>Deep+REM</span><span>1h 03m deep + 1h 29m REM = 44% of sleep</span></div><div class="pr"><span>Falling asleep</span><span>0 min to fall asleep, which usually means sleep debt</span></div><div class="pr"><span>Regularity</span><span>13 min from your usual bedtime</span></div><div class="ph">Recovery</div><div class="pr"><span>HRV</span><span>no reading</span></div><div class="pr"><span>Resting HR</span><span>52 bpm vs 51 baseline (+2%, normal)</span></div><div class="pr"><span>Breathing</span><span>no reading</span></div><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>16,106</span></div><div class="pr"><span>Cardio load</span><span>124</span></div><div class="pr"><span>Workouts</span><span>1</span></div></div></div><div class="person"><div class="phead"><span class="nm">Ella</span><span class="pos">4 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">52</div><div class="l">day</div></div><div class="sc"><div class="n">79</div><div class="l">sleep</div></div><div class="sc"><div class="n">55</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:56%"></i><i class="on" style="height:75%"></i><i class="on" style="height:62%"></i><i class="on" style="height:55%"></i><i class="on" style="height:42%"></i><i class="on" style="height:64%"></i><i class="on" style="height:52%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Sleep</div><div class="pr"><span>Duration</span><span>7h 28m asleep vs 7h 35m, your usual</span></div><div class="pr"><span>Efficiency</span><span>85% of time in bed asleep (85% is already good)</span></div><div class="pr"><span>Deep+REM</span><span>1h 20m deep + 0h 58m REM = 31% of sleep</span></div><div class="pr"><span>Falling asleep</span><span>0 min to fall asleep, which usually means sleep debt</span></div><div class="pr"><span>Regularity</span><span>3 min from your usual bedtime</span></div><div class="ph">Recovery</div><div class="pr"><span>HRV</span><span>100ms vs 113 baseline (-11%, normal)</span></div><div class="pr"><span>Resting HR</span><span>57 bpm vs 59 baseline (-3%, strong)</span></div><div class="pr"><span>Breathing</span><span>15.0 br/min vs 14.6 baseline (+3%, normal)</span></div><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>11,747</span></div><div class="pr"><span>Cardio load</span><span>4</span></div><div class="pr"><span>Workouts</span><span>3</span></div></div></div><div class="person"><div class="phead"><span class="nm">Luke</span><span class="pos">5 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">45</div><div class="l">day</div></div><div class="sc"><div class="n">&mdash;</div><div class="l">sleep</div></div><div class="sc"><div class="n">70</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:69%"></i><i class="on" style="height:62%"></i><i class="on" style="height:74%"></i><i class="on" style="height:56%"></i><i class="on" style="height:73%"></i><i class="on" style="height:76%"></i><i class="on" style="height:45%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Recovery</div><div class="pr"><span>HRV</span><span>no reading</span></div><div class="pr"><span>Resting HR</span><span>63 bpm vs 63 baseline (+0%, strong)</span></div><div class="pr"><span>Breathing</span><span>no reading</span></div><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>1,940</span></div><div class="pr"><span>Workouts</span><span>0</span></div></div></div><div class="person"><div class="phead"><span class="nm">Maleeya</span><span class="pos">6 of 6 yesterday</span></div><div class="scores"><div class="sc"><div class="n">&mdash;</div><div class="l">day</div></div><div class="sc"><div class="n">&mdash;</div><div class="l">sleep</div></div><div class="sc"><div class="n">&mdash;</div><div class="l">recovery</div></div></div><div class="trend"><i class="on" style="height:70%"></i><i class="on" style="height:54%"></i><i class="on" style="height:47%"></i><i class="on" style="height:72%"></i><i class="on" style="height:56%"></i><i class="on" style="height:73%"></i><i class="" style="height:6%"></i></div><div class="tlab">Daily score, last seven days</div><div class="parts"><div class="ph">Activity</div><div class="pr"><span>Steps</span><span>7,691</span></div><div class="pr"><span>Workouts</span><span>0</span></div></div></div><footer>Sleep counts under the night it began. Bars are drawn against nine hours.</footer></body></html>
+
+/* ---------- streaks ---------- */
+function streak(n, test){
+  let s=0; if(!DAY) return 0;
+  for (let i=0;i<60;i++){ const r=rec(n,addDays(DAY,-i)); if(test(r)) s++; else break; }
+  return s;
+}
+
+/* ---------- rings ---------- */
+function ring(v, size, sw, glow){
+  const r=(size-sw)/2, c=2*Math.PI*r, pct=v==null?0:Math.max(0,Math.min(100,v))/100;
+  const col=band(v);
+  return '<svg class="ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+(v==null?'no reading':Math.round(v)+' of 100')+'">'+
+    '<circle class="trk" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke-width="'+sw+'"/>'+
+    '<circle class="arc" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round"'+
+    ' stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+c.toFixed(1)+'" data-off="'+(c*(1-pct)).toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/>'+
+    '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="currentColor" style="font-family:var(--disp);font-weight:800;font-size:'+(size*0.3)+'px">'+(v==null?'\u2013':Math.round(v))+'</text>'+
+  '</svg>';
+}
+
+/* ---------- why line ---------- */
+function whyLine(n){
+  const r=rec(n,DAY), b=(H[n]||{}).base||{};
+  const bits=[];
+  if (r.asleep!=null && b.dur){
+    const d=Math.round(r.asleep-b.dur);
+    if (Math.abs(d)>=10) bits.push({w:Math.abs(d)/b.dur, t:'Slept <b>'+Math.abs(d)+' min '+(d>0?'more':'less')+'</b> than usual'});
+    else bits.push({w:0.01, t:'Slept your usual <b>'+hm(r.asleep)+'</b>'});
+  } else if (r.asleep!=null) bits.push({w:0.01,t:'Slept <b>'+hm(r.asleep)+'</b>'});
+  if (r.hrv!=null && b.hrv){
+    const p=Math.round(100*(r.hrv-b.hrv)/b.hrv);
+    if (Math.abs(p)>=5) bits.push({w:Math.abs(p)/100, t:'HRV <b>'+Math.abs(p)+'% '+(p>0?'above':'below')+'</b> your normal'});
+  }
+  if (r.rhr!=null && b.rhr){
+    const d=Math.round(r.rhr-b.rhr);
+    if (Math.abs(d)>=2) bits.push({w:Math.abs(d)/b.rhr, t:'resting heart rate <b>'+Math.abs(d)+' bpm '+(d<0?'lower':'higher')+'</b> than normal'});
+  }
+  if (!bits.length) return r.daily==null ? 'No sleep or recovery reading for last night yet.' : '';
+  bits.sort((a,b)=>b.w-a.w);
+  const s=bits.slice(0,2).map(x=>x.t);
+  s[0]=s[0].charAt(0).toUpperCase()+s[0].slice(1);
+  if (s[1]) s[1]=s[1].charAt(0).toLowerCase()+s[1].slice(1);
+  return s.join(', and ')+'.';
+}
+
+/* ---------- sections ---------- */
+function whoStrip(){
+  const ordered = me ? [me].concat(names.filter(n=>n!==me)) : names;
+  return '<nav class="who" aria-label="Choose a person">'+ordered.map(n=>
+    '<button data-view="'+esc(n)+'" aria-pressed="'+(n===view)+'">'+esc(n)+(n===me?'<span class="me">(you)</span>':'')+'</button>').join('')+'</nav>';
+}
+
+function picker(){
+  return '<section class="pick"><h1>Who are you?</h1><p>Pick your name once. This page will open on your morning every time.</p><div class="grid">'+
+    names.map(n=>'<button data-me="'+esc(n)+'">'+esc(n)+'</button>').join('')+'</div></section>';
+}
+
+function hero(n){
+  const r=rec(n,DAY), det=detailOf(n);
+  const rank = det && det.daily!=null ? ord(det.rank)+' of '+det.of+' yesterday' : 'Not ranked yesterday';
+  const wear = streak(n, x=>x.asleep!=null);
+  const green = streak(n, x=>x.rec!=null && x.rec>=67);
+  const recs = Object.values((H[n]||{}).days||{}).map(x=>x.rec).filter(v=>v!=null);
+  const best = r.rec!=null && recs.length>=7 && r.rec>=Math.max.apply(null,recs);
+  const chips=[];
+  if (wear>=2) chips.push('<span class="chip">'+wear+' nights worn in a row</span>');
+  if (green>=2) chips.push('<span class="chip hot">'+green+' green days in a row</span>');
+  if (best) chips.push('<span class="chip hot">Best recovery in 30 days</span>');
+  const greet = n===me ? 'Good morning, '+esc(n) : esc(n)+'\u2019s morning';
+  let more='';
+  if (det){
+    const part=(t,rows)=>rows&&rows.length?'<div class="ph">'+t+'</div>'+rows.map(x=>'<div class="pr"><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>').join(''):'';
+    more='<details class="more"><summary>Full breakdown</summary>'+part('Sleep',det.sleep_parts)+part('Recovery',det.rec_parts)+part('Activity',det.activity)+'</details>';
+  }
+  const claim = (me!==n) ? '<button class="claim" data-me="'+esc(n)+'">This is me</button>' : '';
+  return '<section class="hero" style="--glow:'+band(r.rec)+'">'+
+    '<h1 class="greet">'+greet+'</h1>'+
+    '<p class="when">'+esc(D.day||'')+'<br>Daily score '+(r.daily!=null?'<b>'+Math.round(r.daily)+'</b>':'\u2013')+', '+rank+'</p>'+
+    '<div class="rings"><div class="big">'+ring(r.rec,168,16)+'<div class="rlab">Recovery</div></div>'+
+      '<div class="small">'+
+        '<div class="mini">'+ring(r.sleep,74,8)+'<div><div class="t">Sleep</div><div class="s">'+(r.asleep!=null?hm(r.asleep):'no reading')+'</div></div></div>'+
+        '<div class="mini">'+ring(r.effort,74,8)+'<div><div class="t">Effort</div><div class="s">'+(r.load!=null?'load '+Math.round(r.load):'vs your normal')+'</div></div></div>'+
+      '</div></div>'+
+    '<p class="why">'+whyLine(n)+'</p>'+
+    (chips.length?'<div class="chips">'+chips.join('')+'</div>':'')+
+    more+claim+
+  '</section>';
+}
+
+function matchups(){
+  if (!DAY || names.length<2) return '';
+  const focus = view || me;
+  const y = pairings(DAY);
+  const order = y.pairs.slice().sort((p,q)=>(q.includes(focus)?1:0)-(p.includes(focus)?1:0));
+  const rows = order.map(([a,b])=>{
+    const r=result(a,b,DAY);
+    const side=(x,s,cls)=>{
+      const st = !r||r.tie ? '' : (r.w===x?'win':'lose');
+      return '<div class="side '+cls+' '+st+'">'+(cls==='r'?'<span class="sc">'+(s!=null?Math.round(s):'\u2013')+'</span>'+nameBtn(x):nameBtn(x)+'<span class="sc">'+(s!=null?Math.round(s):'\u2013')+'</span>')+'</div>';
+    };
+    let mid='';
+    if (!r) mid='no data';
+    else if (r.tie) mid='tie';
+    else if (r.sa!=null && r.sb!=null) mid='by '+Math.round(Math.abs(r.sa-r.sb));
+    else mid='no-show';
+    return '<div class="mu'+((a===focus||b===focus)?' mine':'')+'">'+side(a,rec(a,DAY).daily,'l')+'<div class="mid">'+mid+'</div>'+side(b,rec(b,DAY).daily,'r')+'</div>';
+  }).join('');
+  let next='';
+  if (focus && TODAY){
+    const t=pairings(TODAY);
+    const p=t.pairs.find(x=>x.includes(focus));
+    if (p){ const opp=p[0]===focus?p[1]:p[0];
+      next='<div class="next"><div><div class="tip">Your next matchup</div><div class="vs">'+esc(focus)+' vs '+esc(opp)+'</div></div><div class="tip" style="text-align:right">Decided by tonight\u2019s sleep<br>and today\u2019s activity</div></div>';
+    } else if (t.bye===focus) next='<div class="next"><div><div class="tip">Your next matchup</div><div class="vs">Bye day</div></div></div>';
+  }
+  const t=record();
+  const rk = names.slice().sort((a,b)=>{
+    const pa=t[a].w/Math.max(1,t[a].w+t[a].l), pb=t[b].w/Math.max(1,t[b].w+t[b].l);
+    return pb-pa || t[b].w-t[a].w;
+  });
+  const table='<table class="rec">'+rk.map(n=>{
+    const x=t[n], g=x.w+x.l;
+    return '<tr class="'+(n===focus?'mine':'')+'"><td>'+nameBtn(n)+'</td><td class="n">'+x.w+'\u2013'+x.l+(x.t?'\u2013'+x.t:'')+'</td><td class="w">'+(g?Math.round(100*x.w/g)+'%':'\u2013')+'</td></tr>';
+  }).join('')+'</table>';
+  return '<section class="sec"><h2>Head to head</h2><p class="note">Everyone gets a new opponent every day. Higher daily score wins.</p>'+next+
+    rows+(y.bye?'<div class="bye">'+esc(y.bye)+' had a bye.</div>':'')+
+    '<h2 style="margin-top:30px;font-size:1.15rem">Record, last 30 days</h2>'+table+'</section>';
+}
+
+function lastNight(){
+  const focus=view||me;
+  const rows=(D.sleep||[]).filter(x=>x.minutes>0);
+  const none=(D.sleep||[]).filter(x=>!(x.minutes>0)).map(x=>x.name);
+  const body=rows.map(x=>{
+    const r=rec(x.name,DAY), tot=Math.max(x.minutes,540);
+    const deep=r.deep||0, rem=r.rem||0, light=Math.max(0,x.minutes-deep-rem);
+    const w=v=>(100*v/tot).toFixed(1)+'%';
+    const meta=[]; if(x.score!=null) meta.push('sleep score '+x.score); if(deep||rem) meta.push(hm(deep+rem)+' deep + REM'); if(x.eff) meta.push(Math.round(x.eff)+'% efficient');
+    return '<div class="row'+(x.name===focus?' mine':'')+'"><div class="top">'+nameBtn(x.name)+'<span class="val">'+esc(x.asleep||'')+'</span></div>'+
+      '<div class="bar">'+(deep||rem?'<i style="width:'+w(deep)+';background:var(--deepc)"></i><i style="width:'+w(rem)+';background:var(--remc)"></i><i style="width:'+w(light)+';background:var(--lightc)"></i>':'<i style="width:'+w(x.minutes)+';background:var(--lightc)"></i>')+'</div>'+
+      '<div class="meta">'+meta.map(m=>'<span>'+esc(m)+'</span>').join('')+'</div></div>';
+  }).join('');
+  return '<section class="sec"><h2>Last night</h2><div class="legend"><span><i style="background:var(--deepc)"></i>Deep</span><span><i style="background:var(--remc)"></i>REM</span><span><i style="background:var(--lightc)"></i>Light</span></div>'+
+    (body||'<p class="note">No nights synced yet.</p>')+
+    (none.length?'<p class="note dim">No reading: '+none.map(esc).join(', ')+'</p>':'')+'</section>';
+}
+
+function todaySoFar(){
+  const focus=view||me, rows=D.today||[];
+  if (!rows.length) return '';
+  const max=Math.max.apply(null, rows.map(x=>x.steps||0).concat([10000]));
+  return '<section class="sec"><h2>Today so far</h2><p class="note">Steps race. Still counting, nothing scored until tonight.</p>'+rows.map(x=>{
+    const meta=[]; if(x.load) meta.push('cardio load '+Math.round(x.load)); if(x.workouts) meta.push(x.workouts+' workout'+(x.workouts===1?'':'s'));
+    return '<div class="row'+(x.name===focus?' mine':'')+'"><div class="top">'+nameBtn(x.name)+'<span class="val">'+(x.steps!=null?Number(x.steps).toLocaleString():'\u2013')+'</span></div>'+
+      '<div class="bar"><i style="width:'+(100*(x.steps||0)/max).toFixed(1)+'%;background:var(--amber)"></i></div>'+
+      (meta.length?'<div class="meta">'+meta.map(m=>'<span>'+esc(m)+'</span>').join('')+'</div>':'')+'</div>';
+  }).join('')+'</section>';
+}
+
+function week(){
+  const focus=view||me, pts=D.points||[];
+  const top=pts.length?Math.max.apply(null,pts.map(x=>Math.max(0,x[1]))):1;
+  const race=pts.map((x,i)=>'<div class="row'+(i===0?' first':'')+(x[0]===focus?' mine':'')+'"><div class="top">'+nameBtn(x[0])+'<span class="val">'+x[1]+'</span></div>'+
+    '<div class="bar"><i style="width:'+(100*Math.max(0,x[1])/(top||1)).toFixed(1)+'%"></i></div></div>').join('');
+  const day_n=D.day_n||0, left=7-day_n;
+  const headline=['Sleep Score','Recovery','Effort','Steps'];
+  const catBox=c=>'<div class="cat'+(c.penalty?' pen':'')+'"><h3>'+esc(c.label)+'</h3>'+
+    (c.entries.length?'<ol>'+c.entries.slice(0,3).map(e=>'<li><span>'+esc(e[0])+'</span><span>'+esc(e[1])+'</span></li>').join('')+'</ol>':'<p class="note" style="margin:0">Nobody yet</p>')+'</div>';
+  const cats=D.categories||[];
+  const head=cats.filter(c=>headline.includes(c.label)), rest=cats.filter(c=>!headline.includes(c.label));
+  return '<section class="sec"><h2>Race for the week</h2><p class="note">Day '+day_n+' of 7. '+(left>0?left+' day'+(left===1?'':'s')+' left, champion crowned Sunday.':'Champion crowned Sunday.')+'</p>'+
+    '<div class="race">'+race+'</div>'+
+    '<div class="cats">'+head.map(catBox).join('')+'</div>'+
+    (rest.length?'<details class="all"><summary>All '+cats.length+' categories</summary><div class="cats">'+rest.map(catBox).join('')+'</div></details>':'')+
+  '</section>';
+}
+
+function trend(n){
+  if (!DAY || !H[n]) return '';
+  const ks=[]; for (let i=13;i>=0;i--) ks.push(addDays(DAY,-i));
+  const bars=ks.map(k=>{ const r=rec(n,k), v=r.rec;
+    return '<i title="'+k+': recovery '+(v==null?'none':Math.round(v))+'" style="height:'+(v==null?4:Math.max(6,v))+'%;background:'+(v==null?'var(--raise)':band(v))+'"></i>'; }).join('');
+  return '<section class="sec"><h2>'+esc(n)+'\u2019s last two weeks</h2><p class="note">Recovery each morning. Green 67 and up, yellow 34 to 66, red below.</p>'+
+    '<div class="trend">'+bars+'</div><div class="tl"><span>2 weeks ago</span><span>Last night</span></div></section>';
+}
+
+function render(){
+  const app=document.getElementById('app');
+  let h='';
+  if (!me && !view){ h+=picker(); }
+  else {
+    h+=whoStrip()+hero(view);
+  }
+  h+=matchups()+lastNight()+todaySoFar()+week()+(view?trend(view):'');
+  h+='<footer>Updated '+esc(D.stamp||'')+' Eastern. Sleep counts under the night it began.'+(me?' <button class="nmb" data-forget="1">Not '+esc(me)+'?</button>':'')+'</footer>';
+  app.innerHTML=h;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    document.querySelectorAll('.ring .arc').forEach(a=>a.setAttribute('stroke-dashoffset',a.getAttribute('data-off')));
+    const sel=document.querySelector('.who button[aria-pressed="true"]'); if(sel) sel.scrollIntoView({block:'nearest',inline:'center'});
+  }));
+}
+
+document.addEventListener('click', e=>{
+  const t=e.target.closest('button'); if(!t) return;
+  if (t.dataset.me){ me=t.dataset.me; view=me; try{localStorage.setItem(KEY,me);}catch(_){} render(); window.scrollTo({top:0}); }
+  else if (t.dataset.view){ view=t.dataset.view; render(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else if (t.dataset.forget){ me=null; view=null; try{localStorage.removeItem(KEY);}catch(_){} render(); window.scrollTo({top:0}); }
+});
+render();
+})();
+</script>
+</body></html>
