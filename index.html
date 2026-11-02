@@ -1,152 +1,181 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive">
-<meta name="theme-color" content="#151A30">
+<meta name="theme-color" content="#0E1220">
 <title>Family leaderboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
 :root{
-  --night:#151A30; --deep:#1E2442; --raise:#262D52; --line:#323A63;
-  --text:#EEF0F8; --muted:#97A0C2; --faint:#5E6790;
-  --green:#4FD18B; --amber:#F3B53F; --red:#F2625E; --dawn:#F7A88B;
-  --deepc:#5B6CF0; --remc:#9C7BF2; --lightc:#3D4675;
+  --bg:#0E1220; --card:#171C2E; --card2:#1F2539; --line:#2A3150;
+  --text:#EEF1FA; --muted:#98A1BF; --faint:#5F6889;
+  --green:#3DDC84; --amber:#F5B83D; --red:#F2605C; --strain:#4DA3FF; --sleepc:#9B8CFF; --dawn:#FF9D7A;
+  --deepc:#5767F2; --remc:#A07CF5; --lightc:#3A4370;
   --font:'Atkinson Hyperlegible',ui-sans-serif,system-ui,sans-serif;
   --disp:'Bricolage Grotesque','Atkinson Hyperlegible',ui-sans-serif,system-ui,sans-serif;
   color-scheme:dark;
 }
 @media (prefers-color-scheme: light){
   :root{
-    --night:#F1F2F8; --deep:#FFFFFF; --raise:#E7E9F4; --line:#D9DCEB;
-    --text:#161A2E; --muted:#5B6385; --faint:#9AA1BF;
-    --green:#17955A; --amber:#B97A06; --red:#CF3B37; --dawn:#C9603E;
-    --deepc:#4152D9; --remc:#7D58DE; --lightc:#C9CEE6;
+    --bg:#EEF0F7; --card:#FFFFFF; --card2:#F3F4FA; --line:#DCDFEC;
+    --text:#141828; --muted:#5A6283; --faint:#9AA1BD;
+    --green:#139257; --amber:#B47805; --red:#CC3A36; --strain:#1F6FD1; --sleepc:#6A57E0; --dawn:#C85F3D;
+    --deepc:#3F50D6; --remc:#7A55DC; --lightc:#C7CCE5;
     color-scheme:light;
   }
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--night);color:var(--text);font-family:var(--font);
-  font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums;
-  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
-#app{max-width:640px;margin:0 auto;padding:18px 18px 64px}
-button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-button:focus-visible,summary:focus-visible{outline:2px solid var(--dawn);outline-offset:3px;border-radius:6px}
-h2{font-family:var(--disp);font-weight:700;font-size:1.45rem;line-height:1.15;margin:0 0 4px;letter-spacing:-.01em}
-.sec{margin-top:44px}
-.note{color:var(--muted);font-size:.9rem;margin:0 0 14px}
+html{-webkit-text-size-adjust:100%;height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.45;font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:inherit}
+button:focus-visible{outline:2px solid var(--dawn);outline-offset:2px;border-radius:8px}
+#app{max-width:600px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 12px) 16px calc(env(safe-area-inset-bottom,0px) + 96px)}
+h2{font-family:var(--disp);font-weight:700;font-size:1.3rem;line-height:1.15;margin:0 0 4px;letter-spacing:-.01em}
+h3{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+.sec{margin-top:26px}
+.note{color:var(--muted);font-size:.88rem;margin:0 0 12px}
+.card{background:var(--card);border-radius:20px;padding:16px}
+.tap{display:block;width:100%}
+.tap:active{transform:scale(.99)}
+
+/* header */
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.top .day{font-family:var(--disp);font-weight:800;font-size:1.3rem;letter-spacing:-.01em;line-height:1.1;white-space:nowrap}
+.top .sub{color:var(--muted);font-size:.82rem}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;background:var(--card);font-size:.8rem;color:var(--muted);white-space:nowrap}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.pill.stale .dot{background:var(--amber)}
+
+/* winners strip */
+.wins{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 14px;padding:0 16px}
+.wins::-webkit-scrollbar{display:none}
+.win{flex:0 0 auto;background:var(--card);border-radius:14px;padding:8px 12px;font-size:.85rem;line-height:1.25}
+.win b{font-weight:700}
+.win .s{color:var(--muted);font-size:.78rem}
+.crown{color:var(--amber);margin-right:4px}
 
 /* who strip */
-.who{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
+.who{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 12px;padding:0 16px 2px}
 .who::-webkit-scrollbar{display:none}
-.who button{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--deep);
-  border:1px solid var(--line);color:var(--muted);font-weight:700;font-size:.92rem}
-.who button[aria-pressed="true"]{background:var(--text);color:var(--night);border-color:var(--text)}
-.who button .me{font-weight:400;opacity:.7;margin-left:4px}
+.who button{flex:0 0 auto;padding:7px 14px;border-radius:999px;background:var(--card);color:var(--muted);font-weight:700;font-size:.9rem}
+.who button[aria-pressed="true"]{background:var(--text);color:var(--bg)}
 
-/* hero */
-.hero{margin-top:10px;background:var(--deep);border-radius:28px;padding:22px 20px 20px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;
-  background:radial-gradient(closest-side,color-mix(in srgb,var(--glow,var(--faint)) 22%,transparent),transparent);pointer-events:none}
-.hero > *{position:relative}
-.greet{font-family:var(--disp);font-weight:800;font-size:2rem;line-height:1.05;letter-spacing:-.02em;margin:0}
-.when{color:var(--muted);margin:6px 0 0;font-size:.95rem}
-.rings{display:grid;grid-template-columns:1.35fr 1fr;gap:12px;align-items:center;margin:18px 0 6px}
-.big{display:flex;flex-direction:column;align-items:center}
-.small{display:grid;gap:12px}
-.mini{display:flex;align-items:center;gap:12px}
-.ring{display:block}
-.ring .trk{stroke:var(--raise)}
-.ring .arc{transition:stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1)}
-.rlab{font-size:.85rem;color:var(--muted);margin-top:2px;text-align:center}
-.mini .t{font-weight:700}
-.mini .s{color:var(--muted);font-size:.85rem;white-space:nowrap}
-.why{font-size:1.02rem;margin:14px 0 0}
-.why b{font-weight:700}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.chip{padding:5px 11px;border-radius:999px;background:var(--raise);font-size:.85rem;font-weight:700}
-.chip.hot{background:color-mix(in srgb,var(--dawn) 22%,var(--raise));color:var(--text)}
-.claim{margin-top:16px;width:100%;padding:12px;border-radius:14px;background:var(--text);color:var(--night);font-weight:700}
-details.more{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
-details.more summary{cursor:pointer;color:var(--muted);font-size:.92rem;list-style:none}
-details.more summary::-webkit-details-marker{display:none}
-details.more summary::after{content:" +";}
-details.more[open] summary::after{content:" \2212";}
-.pr{display:flex;justify-content:space-between;gap:14px;padding:4px 0;font-size:.9rem}
-.pr span:last-child{color:var(--muted);text-align:right}
-.ph{font-weight:700;font-size:.9rem;margin:12px 0 2px}
+/* dials */
+.dials{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.dial{background:var(--card);border-radius:20px;padding:14px 6px 12px;display:flex;flex-direction:column;align-items:center}
+.dial .lab{font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.dial .more{font-size:.75rem;color:var(--faint)}
+.ring .trk{stroke:var(--card2)}
+.ring .arc{transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.why{margin:12px 2px 0;font-size:.98rem}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{padding:5px 10px;border-radius:999px;background:var(--card);font-size:.8rem;font-weight:700}
+.chip.hot{background:color-mix(in srgb,var(--dawn) 22%,var(--card))}
 
-/* picker */
-.pick h1{font-family:var(--disp);font-weight:800;font-size:2.1rem;line-height:1.05;margin:6px 0 8px;letter-spacing:-.02em}
-.pick p{color:var(--muted);margin:0 0 18px}
-.pick .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.pick .grid button{padding:16px;border-radius:18px;background:var(--deep);border:1px solid var(--line);font-family:var(--disp);font-weight:700;font-size:1.15rem;text-align:left}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--card);border-radius:16px;padding:12px}
+.tile .k{font-size:.74rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-family:var(--disp);font-weight:700;font-size:1.3rem;margin-top:2px}
+.tile .v small{font-family:var(--font);font-weight:400;font-size:.75rem;color:var(--muted);margin-left:2px}
+.tile .d{font-size:.76rem;color:var(--muted)}
+.up{color:var(--green)} .down{color:var(--red)}
 
-/* matchups */
-.next{background:var(--deep);border-radius:18px;padding:14px 16px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.next .vs{font-family:var(--disp);font-weight:700;font-size:1.15rem}
-.next .tip{color:var(--muted);font-size:.85rem}
-.mu{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
-.mu:last-child{border-bottom:0}
-.side{display:flex;align-items:baseline;gap:10px}
-.side.r{justify-content:flex-end;text-align:right}
-.side .nm{font-weight:700}
-.side .sc{font-family:var(--disp);font-weight:700;font-size:1.35rem}
-.side.lose{color:var(--muted)}
-.side.lose .sc{color:var(--faint)}
-.side.win .sc{color:var(--green)}
-.mu .mid{color:var(--faint);font-size:.8rem;text-align:center;min-width:52px}
-.mu.mine{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--dawn) 10%,transparent),transparent)}
-.bye{color:var(--muted);font-size:.9rem;padding-top:10px}
-table.rec{width:100%;border-collapse:collapse;margin-top:6px;font-size:.95rem}
-table.rec td{padding:7px 0;border-bottom:1px solid var(--line)}
-table.rec td.n{text-align:right;color:var(--muted);width:72px}
-table.rec td.w{text-align:right;font-weight:700;width:64px}
-table.rec tr.mine td{color:var(--text)}
-table.rec tr.mine td:first-child{font-weight:700}
-.nmb{font-weight:700;text-align:left}
-.nmb:hover{text-decoration:underline;text-underline-offset:3px}
+/* next matchup */
+.vsbox{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.vsbox .big{font-family:var(--disp);font-weight:800;font-size:1.2rem}
 
-/* bars */
-.row{padding:10px 0}
-.row.mine .top .nmb{color:var(--dawn)}
-.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.val{font-family:var(--disp);font-weight:700;font-size:1.1rem}
-.meta{color:var(--muted);font-size:.85rem;display:flex;flex-wrap:wrap;gap:4px 14px}
-.bar{display:flex;height:12px;border-radius:7px;background:var(--raise);overflow:hidden;margin:7px 0 5px}
+/* rows / bars */
+.row{display:block;width:100%;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.rt{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.rt .n{font-weight:700}
+.rt .v{font-family:var(--disp);font-weight:700}
+.row.me .n{color:var(--dawn)}
+.bar{display:flex;height:9px;border-radius:6px;background:var(--card2);overflow:hidden;margin-top:6px}
 .bar i{display:block;height:100%}
-.legend{display:flex;gap:16px;font-size:.82rem;color:var(--muted);margin:2px 0 6px}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
-.dim{color:var(--faint)}
+.meta{color:var(--muted);font-size:.8rem;margin-top:3px}
+.seg{display:flex;background:var(--card);border-radius:12px;padding:3px;gap:2px;margin-bottom:10px}
+.seg button{flex:1;padding:7px 4px;border-radius:9px;font-size:.84rem;font-weight:700;color:var(--muted);text-align:center}
+.seg button[aria-pressed="true"]{background:var(--card2);color:var(--text)}
+.rank{display:inline-block;width:22px;color:var(--faint);font-weight:700}
+
+/* matchup rows */
+.mu{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;width:100%;padding:12px 0;border-bottom:1px solid var(--line)}
+.mu:last-child{border-bottom:0}
+.side{display:flex;align-items:baseline;gap:8px}
+.side.r{justify-content:flex-end}
+.side .sc{font-family:var(--disp);font-weight:800;font-size:1.3rem}
+.side.lose{color:var(--muted)} .side.lose .sc{color:var(--faint)}
+.side.win .sc{color:var(--green)}
+.mid{color:var(--faint);font-size:.76rem;text-align:center;min-width:48px}
+table.t{width:100%;border-collapse:collapse;font-size:.92rem}
+table.t td{padding:8px 0;border-bottom:1px solid var(--line)}
+table.t td.r{text-align:right;color:var(--muted)}
+table.t td.b{text-align:right;font-weight:700;width:56px}
+table.t tr.me td:first-child{color:var(--dawn);font-weight:700}
+
+/* feed */
+.feed{display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:10px;align-items:flex-end}
+.av{flex:0 0 34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:.85rem;color:#fff}
+.bub{background:var(--card2);border-radius:18px 18px 18px 6px;padding:9px 13px;max-width:82%}
+.bub .who2{font-size:.75rem;color:var(--muted);font-weight:700}
+.bub .tx{font-size:.95rem}
+.bub .when{font-size:.72rem;color:var(--faint)}
+.trash{display:block;width:100%;margin-top:12px;padding:12px;border-radius:14px;background:var(--text);color:var(--bg);font-weight:700;text-align:center;text-decoration:none}
 
 /* week */
-.race .bar{height:16px}
-.race .bar i{background:var(--text);opacity:.85;border-radius:8px}
-.race .row.first .bar i{background:var(--dawn);opacity:1}
-.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-.cat{background:var(--deep);border-radius:16px;padding:12px 14px}
-.cat h3{margin:0 0 6px;font-size:.9rem;font-weight:700;color:var(--muted)}
-.cat ol{margin:0;padding:0;list-style:none;font-size:.9rem}
-.cat li{display:flex;justify-content:space-between;gap:8px;padding:1px 0}
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cat{background:var(--card);border-radius:16px;padding:12px}
+.cat h4{margin:0 0 6px;font-size:.84rem;color:var(--muted)}
+.cat.pen h4{color:var(--red)}
+.cat ol{margin:0;padding:0;list-style:none;font-size:.88rem}
+.cat li{display:flex;justify-content:space-between;gap:6px}
 .cat li:first-child{font-weight:700}
 .cat li span:last-child{color:var(--muted);font-weight:400;text-align:right}
-.cat.pen h3{color:var(--red)}
-details.all{margin-top:12px}
-details.all summary{cursor:pointer;color:var(--muted);font-size:.92rem;padding:8px 0}
 
-/* trend */
-.trend{display:flex;align-items:flex-end;gap:4px;height:90px;margin:8px 0 4px}
-.trend i{flex:1;border-radius:4px 4px 2px 2px;min-height:4px;background:var(--raise)}
-.tl{display:flex;justify-content:space-between;color:var(--faint);font-size:.78rem}
+/* detail sheet */
+.sheet{position:fixed;inset:0;background:var(--bg);overflow-y:auto;z-index:20;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px calc(env(safe-area-inset-bottom,0px) + 40px);animation:rise .25s ease-out}
+.sheet .in{max-width:600px;margin:0 auto}
+@keyframes rise{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.back{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;background:var(--card);font-weight:700;font-size:.9rem}
+.hd{text-align:center;margin:14px 0 8px}
+.hd .k{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hd .big{font-family:var(--disp);font-weight:800;font-size:3.4rem;line-height:1;margin-top:4px}
+.hd .s{color:var(--muted);font-size:.9rem;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.stat{background:var(--card);border-radius:14px;padding:10px 6px;text-align:center}
+.stat .v{font-family:var(--disp);font-weight:700;font-size:1.05rem}
+.stat .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.chart{width:100%;display:block}
+.chart text{fill:var(--faint);font-size:10px;font-family:var(--font)}
+.contrib{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.contrib:last-child{border-bottom:0}
+.contrib .n{font-weight:700}
+.contrib .v{text-align:right;font-family:var(--disp);font-weight:700}
+.contrib .m{grid-column:1/-1;color:var(--muted);font-size:.82rem}
+.dev{grid-column:1/-1;position:relative;height:8px;background:var(--card2);border-radius:5px;margin-top:4px}
+.dev i{position:absolute;top:0;bottom:0;border-radius:5px}
+.dev b{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--faint)}
+.legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted);margin:6px 0}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 
-footer{margin-top:48px;color:var(--faint);font-size:.82rem}
-@media (max-width:420px){
-  .greet{font-size:1.7rem}
-  .cats{grid-template-columns:1fr}
-}
-@media (prefers-reduced-motion: reduce){ .ring .arc{transition:none} }
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 0 calc(env(safe-area-inset-bottom,0px) + 6px)}
+nav.tabs .in{max-width:600px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:.72rem;font-weight:700;color:var(--faint)}
+nav.tabs button[aria-pressed="true"]{color:var(--text)}
+nav.tabs svg{width:22px;height:22px}
+
+/* picker */
+.pick h1{font-family:var(--disp);font-weight:800;font-size:2rem;margin:20px 0 6px}
+.pick .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pick .grid button{padding:18px;border-radius:18px;background:var(--card);font-family:var(--disp);font-weight:700;font-size:1.15rem}
+footer{margin-top:28px;color:var(--faint);font-size:.8rem}
+@media (prefers-reduced-motion: reduce){.ring .arc{transition:none}.sheet{animation:none}}
 </style></head>
 <body><div id="app"></div>
-<script id="data" type="application/json">{"label": "Family", "day": "Sunday, November 1", "day_n": 1, "sleep": [{"name": "Brady", "minutes": 461, "asleep": "7h 41m", "score": 75, "eff": 86.8}, {"name": "Luke", "minutes": 436, "asleep": "7h 16m", "score": 75, "eff": 95.4}, {"name": "Ted", "minutes": 338, "asleep": "5h 38m", "score": 83, "eff": 96.8}, {"name": "Maleeya", "minutes": 0, "asleep": null, "score": null, "eff": null}, {"name": "Ella", "minutes": 0, "asleep": null, "score": null, "eff": null}, {"name": "Regina", "minutes": 0, "asleep": null, "score": null, "eff": null}], "today": [{"name": "Brady", "steps": 3565.0, "load": 22, "workouts": 1}, {"name": "Ella", "steps": 2010.0, "load": 0, "workouts": 1}, {"name": "Ted", "steps": 1674.0, "load": 0, "workouts": 0}, {"name": "Luke", "steps": 607.0, "load": 0, "workouts": 0}, {"name": "Maleeya", "steps": 215.0, "load": null, "workouts": 0}], "points": [["Luke", 68.5], ["Ted", 65.7], ["Brady", 61.5], ["Ella", 31.5], ["Regina", 8.2], ["Maleeya", 2.2]], "categories": [{"label": "Sleep Score", "penalty": false, "entries": [["Ted", "83 avg  (1 nights)"], ["Luke", "75 avg  (1 nights)"], ["Brady", "75 avg  (1 nights)"]]}, {"label": "Recovery", "penalty": false, "entries": [["Luke", "71 avg"], ["Ted", "66 avg"], ["Regina", "62 avg"], ["Brady", "31 avg"], ["Ella", "26 avg"]]}, {"label": "Effort", "penalty": false, "entries": [["Luke", "100 vs your normal"], ["Brady", "100 vs your normal"], ["Ella", "100 vs your normal"], ["Ted", "85 vs your normal"], ["Regina", "0 vs your normal"]]}, {"label": "Restorative sleep", "penalty": false, "entries": [["Luke", "3h 28m deep+REM"], ["Brady", "2h 37m deep+REM"], ["Ted", "2h 16m deep+REM"]]}, {"label": "Steps", "penalty": false, "entries": [["Ella", "21,279 steps"], ["Ted", "15,844 steps"], ["Brady", "11,871 steps"], ["Luke", "5,489 steps"], ["Regina", "3,196 steps"], ["Maleeya", "1,194 steps"]]}, {"label": "Cardio load", "penalty": false, "entries": [["Ted", "164 load"], ["Brady", "94 load"], ["Ella", "88 load"], ["Luke", "42 load"], ["Regina", "0 load"]]}, {"label": "Workouts", "penalty": false, "entries": [["Ella", "4 sessions"], ["Brady", "3 sessions"], ["Luke", "1 sessions"], ["Ted", "1 sessions"]]}, {"label": "Perfect days", "penalty": false, "entries": [["Luke", "1 of 7"], ["Brady", "1 of 7"]]}, {"label": "Most consistent", "penalty": false, "entries": []}, {"label": "Most improved", "penalty": false, "entries": []}, {"label": "Workout time", "penalty": false, "entries": [["Ella", "2h 34m total"], ["Luke", "1h 40m total"], ["Brady", "1h 09m total"], ["Ted", "0h 18m total"]]}, {"label": "Wear streak", "penalty": false, "entries": [["Luke", "1 day streak"], ["Brady", "1 day streak"], ["Maleeya", "1 day streak"], ["Ella", "1 day streak"], ["Regina", "1 day streak"], ["Ted", "1 day streak"]]}, {"label": "Couch of the week", "penalty": true, "entries": []}, {"label": "Longest sit", "penalty": true, "entries": [["Ella", "315 min without moving"], ["Regina", "161 min without moving"], ["Luke", "160 min without moving"], ["Brady", "117 min without moving"], ["Ted", "90 min without moving"]]}], "detail": [{"name": "Luke", "rank": 1, "of": 6, "daily": 79, "sleep_score": 75, "recovery": 71, "sleep_parts": [["Duration", "7h 16m asleep vs 7h 28m, your usual"], ["Efficiency", "95% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 42m deep + 1h 46m REM = 48% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "31 min from your usual bedtime"]], "rec_parts": [["HRV", "55ms vs 55 baseline (+0%, strong)"], ["Resting HR", "62 bpm vs 63 baseline (-2%, strong)"], ["Breathing", "14.8 br/min vs 14.8 baseline (+0%, strong)"]], "activity": [["Steps", "5,489"], ["Cardio load", "42"], ["Workouts", "1"]], "trend": [74, 56, 73, 76, 45, 42, 79]}, {"name": "Ted", "rank": 2, "of": 6, "daily": 77, "sleep_score": 83, "recovery": 66, "sleep_parts": [["Duration", "5h 38m asleep vs 5h 38m, your usual"], ["Efficiency", "97% of time in bed asleep (85% is already good)"], ["Deep+REM", "0h 50m deep + 1h 26m REM = 40% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "6 min from your usual bedtime"]], "rec_parts": [["HRV", "no reading"], ["Resting HR", "52 bpm vs 51 baseline (+2%, normal)"], ["Breathing", "no reading"]], "activity": [["Steps", "15,844"], ["Cardio load", "164"], ["Workouts", "1"]], "trend": [78, 70, 43, 58, 73, 39, 77]}, {"name": "Brady", "rank": 3, "of": 6, "daily": 63, "sleep_score": 75, "recovery": 31, "sleep_parts": [["Duration", "7h 41m asleep vs 7h 33m, your usual"], ["Efficiency", "87% of time in bed asleep (85% is already good)"], ["Deep+REM", "0h 37m deep + 2h 00m REM = 34% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "38 min from your usual bedtime"]], "rec_parts": [["HRV", "35ms vs 82 baseline (-58%, low)"], ["Resting HR", "57 bpm vs 55 baseline (+4%, normal)"], ["Breathing", "14.4 br/min vs 14.2 baseline (+1%, normal)"]], "activity": [["Steps", "11,871"], ["Cardio load", "94"], ["Workouts", "3"]], "trend": [60, 45, 75, 92, 86, 48, 63]}, {"name": "Ella", "rank": 4, "of": 6, "daily": 53, "sleep_score": null, "recovery": 26, "sleep_parts": [], "rec_parts": [["HRV", "61ms vs 112 baseline (-46%, low)"], ["Resting HR", "56 bpm vs 59 baseline (-5%, strong)"], ["Breathing", "16.2 br/min vs 14.6 baseline (+11%, low)"]], "activity": [["Steps", "21,279"], ["Cardio load", "88"], ["Workouts", "4"]], "trend": [62, 55, 42, 67, 52, 58, 53]}, {"name": "Regina", "rank": 5, "of": 6, "daily": 39, "sleep_score": null, "recovery": 62, "sleep_parts": [], "rec_parts": [["HRV", "22ms vs 22 baseline (+0%, strong)"], ["Resting HR", "64 bpm vs 63 baseline (+2%, normal)"], ["Breathing", "12.0 br/min vs 11.8 baseline (+2%, normal)"]], "activity": [["Steps", "3,196"], ["Workouts", "0"]], "trend": [56, 47, 46, 77, 73, 63, 39]}, {"name": "Maleeya", "rank": 6, "of": 6, "daily": null, "sleep_score": null, "recovery": null, "sleep_parts": [], "rec_parts": [], "activity": [["Steps", "1,194"], ["Workouts", "0"]], "trend": [48, 75, 60, 73, null, null, null]}], "stamp": "11:00am", "day_iso": "2026-11-01", "history": {"Luke": {"days": {"2026-10-03": {"daily": 79, "sleep": 83, "rec": 76, "asleep": 452, "deep": 90, "rem": 97, "hrv": 62.9, "rhr": 60.0}, "2026-10-04": {"daily": 65, "rec": 65, "hrv": 62.1, "rhr": 60.0}, "2026-10-05": {"daily": 69, "sleep": 64, "rec": 74, "asleep": 438, "deep": 99, "rem": 121, "rhr": 60.0}, "2026-10-06": {"daily": 82, "sleep": 75, "rec": 89, "asleep": 424, "deep": 71, "rem": 79, "hrv": 66.8, "rhr": 58.0}, "2026-10-07": {"daily": 78, "sleep": 66, "rec": 90, "asleep": 440, "deep": 101, "rem": 99, "hrv": 65.6, "rhr": 59.0}, "2026-10-08": {"daily": 50, "sleep": 74, "rec": 25, "asleep": 522, "deep": 101, "rem": 118, "hrv": 31.7, "rhr": 60.0}, "2026-10-09": {"daily": 60, "sleep": 80, "rec": 40, "asleep": 482, "deep": 110, "rem": 118, "hrv": 41.5, "rhr": 63.0}, "2026-10-10": {"daily": 64, "sleep": 68, "rec": 61, "asleep": 476, "deep": 76, "rem": 130, "hrv": 49.5, "rhr": 63.0}, "2026-10-11": {"daily": 74, "sleep": 64, "rec": 85, "asleep": 398, "deep": 61, "rem": 81, "hrv": 79.5, "rhr": 61.0}, "2026-10-12": {"daily": 82, "sleep": 82, "rec": 82, "asleep": 442, "deep": 85, "rem": 141, "hrv": 62.9, "rhr": 60.0}, "2026-10-13": {"daily": 68, "sleep": 76, "rec": 61, "asleep": 505, "deep": 94, "rem": 116, "hrv": 47.8, "rhr": 62.0}, "2026-10-14": {"daily": 82, "sleep": 84, "rec": 79, "asleep": 444, "deep": 97, "rem": 100, "hrv": 63.8, "rhr": 62.0}, "2026-10-15": {"daily": 70, "sleep": 81, "rec": 59, "asleep": 438, "deep": 89, "rem": 118, "hrv": 47.5, "rhr": 62.0}, "2026-10-16": {"daily": 74, "sleep": 73, "rec": 76, "asleep": 454, "deep": 88, "rem": 127, "hrv": 60.8, "rhr": 62.0}, "2026-10-17": {"daily": 68, "sleep": 86, "rec": 51, "asleep": 471, "deep": 94, "rem": 131, "hrv": 43.6, "rhr": 63.0}, "2026-10-18": {"daily": 70, "sleep": 82, "rec": 59, "asleep": 445, "deep": 60, "rem": 137, "hrv": 45.7, "rhr": 63.0}, "2026-10-19": {"daily": 70, "sleep": 81, "rec": 72, "effort": 48, "asleep": 455, "deep": 102, "rem": 108, "hrv": 58.1, "rhr": 63.0, "steps": 5633.0, "load": 13}, "2026-10-20": {"daily": 54, "sleep": 85, "rec": 55, "effort": 0, "asleep": 457, "deep": 94, "rem": 126, "hrv": 46.0, "rhr": 63.0, "steps": 7683.0, "load": 2}, "2026-10-21": {"daily": 54, "sleep": 66, "rec": 74, "effort": 0, "asleep": 458, "deep": 100, "rem": 117, "hrv": 58.2, "rhr": 63.0, "steps": 2303.0, "load": 3}, "2026-10-22": {"daily": 70, "sleep": 74, "rec": 70, "effort": 63, "asleep": 453, "deep": 68, "rem": 99, "rhr": 63.0, "steps": 8621.0, "load": 15}, "2026-10-23": {"daily": 65, "sleep": 69, "rec": 63, "effort": 63, "asleep": 460, "deep": 94, "rem": 97, "hrv": 55.0, "rhr": 63.0, "steps": 18225.0, "load": 15, "wk": 7}, "2026-10-24": {"daily": 69, "sleep": 71, "rec": 49, "effort": 100, "asleep": 466, "deep": 73, "rem": 103, "hrv": 49.0, "rhr": 64.0, "steps": 17223.0, "load": 201, "wk": 3}, "2026-10-25": {"daily": 62, "sleep": 61, "rec": 40, "effort": 100, "asleep": 362, "deep": 103, "rem": 73, "hrv": 47.4, "rhr": 64.0, "steps": 12229.0, "load": 61, "wk": 2}, "2026-10-26": {"daily": 74, "sleep": 84, "rec": 64, "effort": 73, "asleep": 451, "deep": 64, "rem": 117, "hrv": 53.5, "rhr": 64.0, "steps": 5188.0, "load": 17, "wk": 2}, "2026-10-27": {"daily": 56, "sleep": 77, "rec": 67, "effort": 0, "asleep": 419, "deep": 94, "rem": 100, "hrv": 64.6, "rhr": 64.0, "steps": 12039.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 73, "sleep": 66, "rec": 79, "effort": 76, "asleep": 421, "deep": 75, "rem": 102, "hrv": 64.9, "rhr": 63.0, "steps": 8801.0, "load": 18, "wk": 2}, "2026-10-29": {"daily": 76, "rec": 63, "effort": 100, "hrv": 55.3, "rhr": 63.0, "steps": 16869.0, "load": 31, "wk": 3}, "2026-10-30": {"daily": 45, "rec": 70, "effort": 0, "rhr": 63.0, "steps": 1940.0, "load": 0}, "2026-10-31": {"daily": 42, "sleep": 39, "rec": 70, "effort": 0, "asleep": 341, "deep": 69, "rem": 62, "rhr": 63.0, "steps": 3108.0, "load": 0, "wk": 1}, "2026-11-01": {"daily": 79, "sleep": 75, "rec": 71, "effort": 100, "asleep": 436, "deep": 102, "rem": 106, "hrv": 55.0, "rhr": 62.0, "steps": 5489.0, "load": 42, "wk": 1}}, "base": {"dur": 448.0, "hrv": 55.0, "rhr": 63.0}}, "Brady": {"days": {"2026-10-03": {"daily": 70, "sleep": 64, "rec": 75, "asleep": 471, "deep": 67, "rem": 77, "hrv": 82.5, "rhr": 53.0}, "2026-10-04": {"daily": 63, "sleep": 90, "rec": 35, "asleep": 526, "deep": 69, "rem": 112, "hrv": 44.3, "rhr": 55.0}, "2026-10-05": {"daily": 70, "sleep": 60, "rec": 80, "asleep": 361, "deep": 75, "rem": 67, "hrv": 95.6, "rhr": 53.0}, "2026-10-06": {"daily": 52, "sleep": 68, "rec": 35, "asleep": 504, "deep": 100, "rem": 81, "hrv": 33.0, "rhr": 55.0}, "2026-10-07": {"daily": 56, "sleep": 73, "rec": 40, "asleep": 453, "deep": 63, "rem": 106, "hrv": 57.0, "rhr": 56.0}, "2026-10-08": {"daily": 80, "sleep": 80, "rec": 81, "asleep": 467, "deep": 73, "rem": 103, "hrv": 94.9, "rhr": 54.0}, "2026-10-09": {"daily": 65, "sleep": 71, "rec": 59, "asleep": 454, "deep": 71, "rem": 85, "hrv": 81.0, "rhr": 54.0}, "2026-10-10": {"daily": 64, "sleep": 68, "rec": 60, "asleep": 485, "deep": 60, "rem": 102, "hrv": 81.7, "rhr": 54.0}, "2026-10-11": {"daily": 70, "sleep": 84, "rec": 55, "asleep": 487, "deep": 83, "rem": 90, "hrv": 66.0, "rhr": 54.0}, "2026-10-12": {"daily": 66, "sleep": 71, "rec": 61, "asleep": 428, "deep": 67, "rem": 93, "hrv": 97.2, "rhr": 54.0}, "2026-10-13": {"daily": 80, "sleep": 78, "rec": 83, "asleep": 445, "deep": 68, "rem": 90, "hrv": 102.4, "rhr": 54.0}, "2026-10-14": {"daily": 69, "sleep": 58, "rec": 81, "asleep": 358, "deep": 59, "rem": 72, "hrv": 97.0, "rhr": 53.0}, "2026-10-15": {"daily": 74, "sleep": 87, "rec": 60, "asleep": 484, "deep": 77, "rem": 120, "hrv": 78.7, "rhr": 54.0}, "2026-10-16": {"daily": 60, "sleep": 53, "rec": 68, "asleep": 408, "deep": 75, "rem": 106, "hrv": 85.5, "rhr": 55.0}, "2026-10-17": {"daily": 58, "sleep": 88, "rec": 27, "asleep": 582, "deep": 90, "rem": 164, "hrv": 37.4, "rhr": 57.0}, "2026-10-18": {"daily": 46, "sleep": 60, "rec": 32, "asleep": 395, "deep": 56, "rem": 64, "hrv": 36.0, "rhr": 58.0}, "2026-10-19": {"daily": 55, "sleep": 68, "rec": 74, "effort": 0, "asleep": 404, "deep": 67, "rem": 73, "hrv": 109.0, "rhr": 56.0, "steps": 7445.0, "load": 1}, "2026-10-20": {"daily": 78, "sleep": 71, "rec": 73, "effort": 100, "asleep": 445, "deep": 61, "rem": 90, "hrv": 89.2, "rhr": 56.0, "steps": 18595.0, "load": 45, "wk": 3}, "2026-10-21": {"daily": 44, "sleep": 75, "rec": 34, "effort": 5, "asleep": 438, "deep": 55, "rem": 104, "hrv": 60.0, "rhr": 57.0, "steps": 9020.0, "load": 4, "wk": 2}, "2026-10-22": {"daily": 62, "sleep": 74, "rec": 67, "effort": 31, "asleep": 475, "deep": 66, "rem": 101, "hrv": 83.4, "rhr": 55.0, "steps": 5580.0, "load": 6, "wk": 2}, "2026-10-23": {"daily": 81, "sleep": 66, "rec": 90, "effort": 92, "asleep": 436, "deep": 66, "rem": 92, "hrv": 129.1, "rhr": 55.0, "steps": 10120.0, "load": 13, "wk": 3}, "2026-10-24": {"daily": 51, "sleep": 76, "rec": 52, "effort": 5, "asleep": 472, "deep": 65, "rem": 88, "hrv": 64.7, "rhr": 55.0, "steps": 7167.0, "load": 4, "wk": 1}, "2026-10-25": {"daily": 58, "sleep": 79, "rec": 69, "effort": 0, "asleep": 480, "deep": 76, "rem": 88, "hrv": 81.6, "rhr": 55.0, "steps": 3771.0, "load": 3, "wk": 3}, "2026-10-26": {"daily": 60, "sleep": 48, "rec": 82, "effort": 44, "asleep": 336, "deep": 54, "rem": 65, "hrv": 93.8, "rhr": 54.0, "steps": 12240.0, "load": 7, "wk": 6}, "2026-10-27": {"daily": 45, "sleep": 69, "rec": 37, "effort": 18, "asleep": 434, "deep": 52, "rem": 88, "hrv": 59.9, "rhr": 55.0, "steps": 8216.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 75, "sleep": 70, "rec": 83, "effort": 70, "asleep": 431, "deep": 65, "rem": 60, "hrv": 93.0, "rhr": 53.0, "steps": 6293.0, "load": 9, "wk": 2}, "2026-10-29": {"daily": 92, "rec": 88, "effort": 100, "hrv": 105.8, "rhr": 53.0, "steps": 5782.0, "load": 19, "wk": 2}, "2026-10-30": {"daily": 86, "sleep": 78, "effort": 100, "asleep": 504, "deep": 66, "rem": 137, "steps": 22054.0, "load": 184, "wk": 8}, "2026-10-31": {"daily": 48, "sleep": 38, "rec": 27, "effort": 100, "asleep": 356, "deep": 45, "rem": 70, "hrv": 37.1, "rhr": 55.0, "steps": 18743.0, "load": 70, "wk": 4}, "2026-11-01": {"daily": 63, "sleep": 75, "rec": 31, "effort": 100, "asleep": 461, "deep": 37, "rem": 120, "hrv": 34.7, "rhr": 57.0, "steps": 11871.0, "load": 94, "wk": 3}}, "base": {"dur": 453.5, "hrv": 82.1, "rhr": 55.0}}, "Maleeya": {"days": {"2026-10-03": {"daily": 72, "sleep": 74, "rec": 70, "asleep": 449, "deep": 79, "rem": 120, "hrv": 103.7, "rhr": 52.0}, "2026-10-04": {"daily": 71, "rec": 71, "hrv": 127.7, "rhr": 51.0}, "2026-10-05": {"daily": 69, "sleep": 69, "asleep": 444, "deep": 8, "rem": 83}, "2026-10-06": {"daily": 39, "sleep": 65, "rec": 13, "asleep": 550, "deep": 44, "rem": 58, "hrv": 16.1, "rhr": 55.0}, "2026-10-07": {"daily": 36, "sleep": 71, "rec": 0, "asleep": 591, "deep": 60, "rem": 91, "hrv": 14.6, "rhr": 59.0}, "2026-10-08": {"daily": 26, "sleep": 41, "rec": 12, "asleep": 354, "deep": 45, "rem": 78, "hrv": 15.5, "rhr": 59.0}, "2026-10-09": {"daily": 46, "sleep": 72, "rec": 21, "asleep": 487, "deep": 77, "rem": 85, "hrv": 49.7, "rhr": 60.0}, "2026-10-10": {"daily": 62, "sleep": 69, "rec": 55, "asleep": 479, "deep": 55, "rem": 79, "hrv": 130.7, "rhr": 58.0}, "2026-10-11": {"daily": 74, "sleep": 77, "rec": 71, "asleep": 462, "deep": 77, "rem": 113, "hrv": 130.5, "rhr": 55.0}, "2026-10-12": {"daily": 79, "sleep": 72, "rec": 86, "asleep": 494, "deep": 56, "rem": 134, "hrv": 164.6, "rhr": 53.0}, "2026-10-13": {"daily": 68, "sleep": 69, "rec": 66, "asleep": 491, "deep": 18, "rem": 76, "hrv": 171.6, "rhr": 52.0}, "2026-10-14": {"daily": 79, "sleep": 77, "rec": 81, "asleep": 506, "deep": 79, "rem": 92, "hrv": 113.8, "rhr": 51.0}, "2026-10-15": {"daily": 76, "sleep": 66, "rec": 86, "asleep": 449, "deep": 50, "rem": 68, "hrv": 129.1, "rhr": 50.0}, "2026-10-16": {"daily": 84, "sleep": 80, "rec": 87, "asleep": 667, "deep": 84, "rem": 180, "hrv": 135.1, "rhr": 50.0}, "2026-10-17": {"daily": 79, "sleep": 81, "rec": 78, "asleep": 504, "deep": 61, "rem": 110, "hrv": 118.6, "rhr": 50.0}, "2026-10-18": {"daily": 81, "sleep": 82, "rec": 80, "asleep": 496, "deep": 70, "rem": 116, "hrv": 110.3, "rhr": 49.0}, "2026-10-19": {"daily": 63, "sleep": 78, "rec": 85, "effort": 0, "asleep": 482, "deep": 62, "rem": 93, "hrv": 125.7, "rhr": 49.0, "steps": 11070.0, "load": 21}, "2026-10-20": {"daily": 88, "sleep": 81, "rec": 87, "effort": 100, "asleep": 517, "deep": 67, "rem": 137, "hrv": 109.0, "rhr": 48.0, "steps": 15528.0, "load": 216, "wk": 4}, "2026-10-21": {"daily": 61, "sleep": 63, "rec": 69, "effort": 42, "asleep": 488, "deep": 60, "rem": 134, "hrv": 108.3, "rhr": 51.0, "steps": 11433.0, "load": 94, "wk": 4}, "2026-10-22": {"daily": 79, "sleep": 78, "rec": 68, "effort": 100, "asleep": 539, "deep": 102, "rem": 157, "hrv": 109.4, "rhr": 52.0, "steps": 23810.0, "load": 393, "wk": 3}, "2026-10-23": {"daily": 61, "sleep": 86, "rec": 71, "effort": 0, "asleep": 501, "deep": 90, "rem": 124, "hrv": 112.3, "rhr": 53.0, "steps": 6941.0, "load": 4, "wk": 1}, "2026-10-24": {"daily": 73, "sleep": 69, "rec": 68, "effort": 87, "asleep": 472, "deep": 94, "rem": 134, "hrv": 109.1, "rhr": 54.0, "steps": 8495.0, "load": 166, "wk": 2}, "2026-10-25": {"daily": 54, "sleep": 72, "rec": 68, "effort": 0, "asleep": 449, "deep": 100, "rem": 124, "hrv": 103.1, "rhr": 53.0, "steps": 4214.0, "load": 0}, "2026-10-26": {"daily": 48, "sleep": 71, "rec": 53, "effort": 0, "asleep": 447, "deep": 81, "rem": 101, "hrv": 101.1, "rhr": 54.0, "steps": 8866.0, "load": 22, "wk": 1}, "2026-10-27": {"daily": 75, "sleep": 78, "rec": 69, "effort": 81, "asleep": 474, "deep": 88, "rem": 119, "hrv": 97.9, "rhr": 53.0, "steps": 13931.0, "load": 152, "wk": 2}, "2026-10-28": {"daily": 60, "sleep": 70, "rec": 59, "effort": 44, "asleep": 466, "deep": 84, "rem": 126, "hrv": 109.0, "rhr": 54.0, "steps": 12762.0, "load": 96, "wk": 3}, "2026-10-29": {"daily": 73, "rec": 58, "effort": 100, "hrv": 113.8, "rhr": 54.0, "steps": 24827.0, "load": 409, "wk": 5}, "2026-10-30": {"effort": 0, "steps": 7691.0, "load": 0}, "2026-10-31": {"steps": 7067.0}, "2026-11-01": {"steps": 1194.0}}, "base": {"dur": 484.5, "hrv": 109.8, "rhr": 53.0}}, "Ella": {"days": {"2026-10-03": {"daily": 70, "sleep": 62, "rec": 78, "asleep": 469, "deep": 47, "rem": 75, "hrv": 130.8, "rhr": 59.0}, "2026-10-04": {"daily": 74, "sleep": 73, "rec": 75, "asleep": 495, "deep": 84, "rem": 82, "hrv": 121.6, "rhr": 59.0}, "2026-10-05": {"daily": 76, "sleep": 77, "rec": 75, "asleep": 440, "deep": 63, "rem": 88, "hrv": 131.8, "rhr": 58.0}, "2026-10-06": {"daily": 78, "sleep": 87, "rec": 69, "asleep": 521, "deep": 64, "rem": 82, "hrv": 131.9, "rhr": 57.0}, "2026-10-07": {"daily": 79, "sleep": 75, "rec": 83, "asleep": 452, "deep": 48, "rem": 73, "hrv": 131.9, "rhr": 57.0}, "2026-10-08": {"daily": 64, "sleep": 62, "rec": 67, "asleep": 383, "deep": 54, "rem": 76, "hrv": 112.4, "rhr": 56.0}, "2026-10-09": {"daily": 76, "sleep": 73, "rec": 79, "asleep": 453, "deep": 64, "rem": 71, "hrv": 112.8, "rhr": 56.0}, "2026-10-10": {"daily": 72, "sleep": 82, "rec": 61, "asleep": 553, "deep": 86, "rem": 117, "hrv": 94.2, "rhr": 56.0}, "2026-10-11": {"daily": 54, "sleep": 44, "rec": 65, "asleep": 277, "deep": 48, "rem": 33, "hrv": 96.7, "rhr": 56.0}, "2026-10-12": {"daily": 59, "sleep": 70, "rec": 47, "asleep": 551, "deep": 46, "rem": 88, "hrv": 89.9, "rhr": 57.0}, "2026-10-13": {"daily": 56, "sleep": 61, "rec": 52, "asleep": 412, "deep": 51, "rem": 85, "hrv": 96.3, "rhr": 57.0}, "2026-10-14": {"daily": 76, "sleep": 81, "rec": 72, "asleep": 455, "deep": 69, "rem": 90, "hrv": 111.8, "rhr": 59.0}, "2026-10-15": {"daily": 63, "sleep": 67, "rec": 59, "asleep": 410, "deep": 57, "rem": 70, "hrv": 104.5, "rhr": 61.0}, "2026-10-16": {"daily": 68, "sleep": 76, "rec": 59, "asleep": 633, "deep": 56, "rem": 109, "hrv": 122.9, "rhr": 61.0}, "2026-10-17": {"daily": 70, "sleep": 76, "rec": 64, "asleep": 513, "deep": 83, "rem": 76, "hrv": 115.2, "rhr": 61.0}, "2026-10-18": {"daily": 65, "sleep": 68, "rec": 62, "asleep": 538, "deep": 66, "rem": 63, "hrv": 115.1, "rhr": 62.0}, "2026-10-19": {"daily": 60, "sleep": 73, "rec": 73, "effort": 16, "asleep": 481, "deep": 51, "rem": 92, "hrv": 136.9, "rhr": 61.0, "steps": 13392.0, "load": 15, "wk": 2}, "2026-10-20": {"daily": 72, "sleep": 63, "rec": 66, "effort": 100, "asleep": 406, "deep": 83, "rem": 87, "hrv": 122.1, "rhr": 61.0, "steps": 15816.0, "load": 124, "wk": 3}, "2026-10-21": {"daily": 48, "sleep": 88, "rec": 36, "effort": 0, "asleep": 512, "deep": 70, "rem": 105, "hrv": 83.0, "rhr": 62.0, "steps": 13103.0, "load": 5, "wk": 2}, "2026-10-22": {"daily": 69, "sleep": 62, "rec": 58, "effort": 100, "asleep": 422, "deep": 70, "rem": 57, "hrv": 111.2, "rhr": 61.0, "steps": 9863.0, "load": 126, "wk": 3}, "2026-10-23": {"daily": 43, "sleep": 76, "rec": 31, "effort": 8, "asleep": 507, "deep": 83, "rem": 72, "hrv": 80.3, "rhr": 63.0, "steps": 14991.0, "load": 13, "wk": 2}, "2026-10-24": {"daily": 59, "sleep": 81, "rec": 31, "effort": 70, "asleep": 586, "deep": 25, "rem": 62, "hrv": 96.2, "rhr": 63.0, "steps": 10469.0, "load": 28, "wk": 4}, "2026-10-25": {"daily": 75, "sleep": 83, "rec": 52, "effort": 100, "asleep": 495, "deep": 68, "rem": 81, "hrv": 112.5, "rhr": 62.0, "steps": 12150.0, "load": 106, "wk": 3}, "2026-10-26": {"daily": 62, "sleep": 49, "rec": 54, "effort": 100, "asleep": 380, "deep": 35, "rem": 38, "hrv": 105.6, "rhr": 61.0, "steps": 9708.0, "load": 103, "wk": 3}, "2026-10-27": {"daily": 55, "sleep": 75, "rec": 67, "effort": 0, "asleep": 466, "deep": 62, "rem": 59, "hrv": 112.8, "rhr": 60.0, "steps": 11546.0, "load": 0, "wk": 3}, "2026-10-28": {"daily": 42, "sleep": 50, "rec": 58, "effort": 0, "asleep": 343, "deep": 63, "rem": 51, "hrv": 111.5, "rhr": 57.0, "steps": 13883.0, "load": 7, "wk": 5}, "2026-10-29": {"daily": 67, "sleep": 58, "rec": 82, "effort": 58, "asleep": 401, "deep": 67, "rem": 30, "hrv": 134.4, "rhr": 56.0, "steps": 26576.0, "load": 25, "wk": 8}, "2026-10-30": {"daily": 52, "sleep": 78, "rec": 56, "effort": 0, "asleep": 448, "deep": 80, "rem": 58, "hrv": 100.2, "rhr": 57.0, "steps": 11747.0, "load": 4, "wk": 3}, "2026-10-31": {"daily": 58, "sleep": 32, "rec": 59, "effort": 100, "asleep": 293, "deep": 40, "rem": 33, "hrv": 114.2, "rhr": 55.0, "steps": 15775.0, "load": 57, "wk": 3}, "2026-11-01": {"daily": 53, "rec": 26, "effort": 100, "hrv": 60.9, "rhr": 56.0, "steps": 21279.0, "load": 88, "wk": 4}}, "base": {"dur": 460.5, "hrv": 112.5, "rhr": 59.0}}, "Regina": {"days": {"2026-10-03": {"daily": 60, "sleep": 72, "rec": 47, "asleep": 382, "deep": 114, "rem": 101, "hrv": 20.7, "rhr": 62.0}, "2026-10-04": {"daily": 64, "sleep": 79, "rec": 50, "asleep": 375, "deep": 67, "rem": 53, "hrv": 18.0, "rhr": 63.0}, "2026-10-05": {"daily": 67, "sleep": 77, "rec": 57, "asleep": 399, "deep": 96, "rem": 97, "hrv": 19.1, "rhr": 65.0}, "2026-10-06": {"daily": 33, "rec": 33, "hrv": 18.2, "rhr": 67.0}, "2026-10-07": {"daily": 87, "sleep": 87, "asleep": 434, "deep": 93, "rem": 82}, "2026-10-08": {"daily": 46, "sleep": 66, "rec": 26, "asleep": 344, "deep": 80, "rem": 72, "hrv": 16.5, "rhr": 67.0}, "2026-10-09": {"daily": 54, "sleep": 72, "rec": 35, "asleep": 366, "deep": 78, "rem": 88, "hrv": 19.6, "rhr": 67.0}, "2026-10-10": {"daily": 53, "sleep": 76, "rec": 30, "asleep": 476, "deep": 84, "rem": 134, "hrv": 20.3, "rhr": 67.0}, "2026-10-11": {"daily": 51, "rec": 51, "hrv": 26.4, "rhr": 65.0}, "2026-10-12": {"daily": 70, "sleep": 73, "rec": 67, "asleep": 456, "deep": 68, "rem": 114, "rhr": 64.0}, "2026-10-13": {"daily": 76, "sleep": 96, "rec": 55, "asleep": 481, "deep": 76, "rem": 134, "hrv": 22.3, "rhr": 62.0}, "2026-10-14": {"daily": 81, "sleep": 89, "rec": 73, "asleep": 458, "deep": 91, "rem": 88, "hrv": 27.2, "rhr": 62.0}, "2026-10-15": {"daily": 62, "sleep": 50, "rec": 73, "asleep": 348, "deep": 42, "rem": 99, "hrv": 22.5, "rhr": 62.0}, "2026-10-16": {"daily": 80, "sleep": 85, "rec": 75, "asleep": 482, "deep": 80, "rem": 157, "hrv": 21.5, "rhr": 62.0}, "2026-10-17": {"daily": 64, "sleep": 51, "rec": 76, "asleep": 325, "deep": 65, "rem": 89, "hrv": 22.8, "rhr": 62.0}, "2026-10-18": {"daily": 76, "sleep": 75, "rec": 77, "asleep": 379, "deep": 88, "rem": 115, "hrv": 21.0, "rhr": 62.0}, "2026-10-19": {"daily": 37, "sleep": 26, "rec": 69, "effort": 0, "asleep": 173, "deep": 15, "rem": 77, "hrv": 22.4, "rhr": 62.0, "steps": 8051.0, "load": 2}, "2026-10-20": {"daily": 56, "rec": 81, "effort": 12, "hrv": 23.7, "rhr": 62.0, "steps": 11360.0, "load": 4}, "2026-10-21": {"effort": 70, "steps": 2879.0, "load": 8}, "2026-10-22": {"daily": 54, "sleep": 85, "effort": 0, "asleep": 424, "deep": 65, "rem": 95, "steps": 437.0, "load": 0}, "2026-10-23": {"daily": 80, "sleep": 70, "rec": 78, "effort": 100, "asleep": 420, "deep": 55, "rem": 76, "hrv": 24.6, "rhr": 63.0, "steps": 20553.0, "load": 92, "wk": 7}, "2026-10-24": {"daily": 58, "sleep": 92, "rec": 58, "effort": 0, "asleep": 464, "deep": 72, "rem": 141, "hrv": 20.6, "rhr": 64.0, "steps": 8687.0, "load": 0, "wk": 1}, "2026-10-25": {"daily": 63, "sleep": 69, "rec": 78, "effort": 26, "asleep": 345, "deep": 52, "rem": 117, "hrv": 24.6, "rhr": 63.0, "steps": 7271.0, "load": 5, "wk": 2}, "2026-10-26": {"daily": 56, "sleep": 65, "rec": 79, "effort": 0, "asleep": 349, "deep": 91, "rem": 94, "hrv": 22.4, "rhr": 63.0, "steps": 8249.0, "load": 1}, "2026-10-27": {"daily": 47, "sleep": 36, "rec": 85, "effort": 0, "asleep": 265, "deep": 65, "rem": 56, "hrv": 24.6, "rhr": 62.0, "steps": 7823.0, "load": 0, "wk": 1}, "2026-10-28": {"daily": 46, "rec": 72, "effort": 0, "hrv": 22.4, "steps": 89.0, "load": 0}, "2026-10-29": {"daily": 77, "sleep": 83, "rec": 71, "effort": 76, "asleep": 383, "deep": 73, "rem": 103, "rhr": 62.0, "steps": 6537.0, "load": 9, "wk": 2}, "2026-10-30": {"daily": 73, "sleep": 72, "rec": 65, "effort": 89, "asleep": 379, "deep": 74, "rem": 77, "hrv": 19.9, "rhr": 63.0, "steps": 9343.0, "load": 11, "wk": 1}, "2026-10-31": {"daily": 63, "sleep": 88, "rec": 34, "effort": 70, "asleep": 414, "deep": 108, "rem": 123, "hrv": 14.8, "rhr": 66.0, "steps": 10053.0, "load": 8, "wk": 2}, "2026-11-01": {"daily": 39, "rec": 62, "effort": 0, "hrv": 21.5, "rhr": 64.0, "steps": 3196.0, "load": 0}}, "base": {"dur": 382.0, "hrv": 21.5, "rhr": 63.0}}, "Ted": {"days": {"2026-10-18": {"daily": 79, "sleep": 85, "rec": 74, "asleep": 372, "deep": 65, "rem": 92, "rhr": 49.0}, "2026-10-19": {"daily": 76, "sleep": 82, "rec": 70, "effort": 74, "asleep": 344, "deep": 60, "rem": 65, "hrv": 36.0, "rhr": 50.0, "steps": 13292.0, "load": 137, "wk": 1}, "2026-10-20": {"daily": 74, "sleep": 81, "rec": 68, "effort": 71, "asleep": 337, "deep": 68, "rem": 88, "hrv": 37.4, "rhr": 51.0, "steps": 14786.0, "load": 129, "wk": 1}, "2026-10-21": {"daily": 74, "sleep": 86, "rec": 75, "effort": 49, "asleep": 356, "deep": 67, "rem": 62, "hrv": 38.1, "rhr": 51.0, "steps": 14961.0, "load": 103, "wk": 1}, "2026-10-22": {"daily": 69, "sleep": 67, "rec": 69, "effort": 71, "asleep": 296, "deep": 52, "rem": 64, "hrv": 41.9, "rhr": 52.0, "steps": 14724.0, "load": 128, "wk": 1}, "2026-10-23": {"daily": 51, "sleep": 93, "rec": 39, "effort": 0, "asleep": 426, "deep": 103, "rem": 110, "hrv": 36.4, "rhr": 52.0, "steps": 22102.0, "load": 16, "wk": 7}, "2026-10-24": {"daily": 65, "sleep": 57, "rec": 68, "effort": 72, "asleep": 311, "deep": 76, "rem": 80, "hrv": 40.7, "rhr": 51.0, "steps": 10525.0, "load": 131, "wk": 3}, "2026-10-25": {"daily": 64, "sleep": 83, "rec": 62, "effort": 33, "asleep": 351, "deep": 75, "rem": 93, "hrv": 38.7, "rhr": 51.0, "steps": 11665.0, "load": 86, "wk": 2}, "2026-10-26": {"daily": 78, "sleep": 73, "rec": 83, "effort": 79, "asleep": 310, "deep": 67, "rem": 68, "hrv": 46.3, "rhr": 51.0, "steps": 14075.0, "load": 148, "wk": 1}, "2026-10-27": {"daily": 70, "sleep": 53, "rec": 82, "effort": 77, "asleep": 317, "deep": 83, "rem": 59, "hrv": 44.0, "rhr": 50.0, "steps": 19179.0, "load": 143}, "2026-10-28": {"daily": 43, "sleep": 32, "rec": 76, "effort": 6, "asleep": 239, "deep": 52, "rem": 52, "hrv": 38.7, "rhr": 51.0, "steps": 14706.0, "load": 57, "wk": 2}, "2026-10-29": {"daily": 58, "rec": 52, "effort": 68, "hrv": 37.5, "rhr": 51.0, "steps": 17492.0, "load": 124, "wk": 1}, "2026-10-30": {"daily": 73, "sleep": 82, "rec": 66, "effort": 68, "asleep": 344, "deep": 63, "rem": 89, "rhr": 52.0, "steps": 16106.0, "load": 124, "wk": 1}, "2026-10-31": {"daily": 39, "rec": 47, "effort": 25, "hrv": 39.0, "rhr": 52.0, "steps": 14634.0, "load": 77, "wk": 2}, "2026-11-01": {"daily": 77, "sleep": 83, "rec": 66, "effort": 85, "asleep": 338, "deep": 50, "rem": 86, "rhr": 52.0, "steps": 15844.0, "load": 164, "wk": 1}}, "base": {"dur": 338.0, "hrv": 38.7, "rhr": 51.0}}}}</script>
+<script id="data" type="application/json">{"label": "Family", "day": "Sunday, November 1", "day_n": 1, "sleep": [{"name": "Ella", "minutes": 553, "asleep": "9h 13m", "score": 69, "eff": 97.9}, {"name": "Brady", "minutes": 461, "asleep": "7h 41m", "score": 75, "eff": 86.8}, {"name": "Luke", "minutes": 436, "asleep": "7h 16m", "score": 75, "eff": 95.4}, {"name": "Ted", "minutes": 338, "asleep": "5h 38m", "score": 83, "eff": 96.8}, {"name": "Maleeya", "minutes": 0, "asleep": null, "score": null, "eff": null}, {"name": "Regina", "minutes": 0, "asleep": null, "score": null, "eff": null}], "today": [{"name": "Brady", "steps": 4660.0, "load": 24, "workouts": 1}, {"name": "Ella", "steps": 3852.0, "load": 0, "workouts": 1}, {"name": "Ted", "steps": 3667.0, "load": 1, "workouts": 0}, {"name": "Luke", "steps": 1662.0, "load": 2, "workouts": 0}, {"name": "Maleeya", "steps": 1611.0, "load": null, "workouts": 0}], "points": [["Luke", 67.3], ["Ted", 63.7], ["Brady", 60.3], ["Ella", 49.8], ["Regina", 8.2], ["Maleeya", 2.2]], "categories": [{"label": "Sleep Score", "penalty": false, "entries": [["Ted", "83 avg  (1 nights)"], ["Luke", "75 avg  (1 nights)"], ["Brady", "75 avg  (1 nights)"], ["Ella", "69 avg  (1 nights)"]]}, {"label": "Recovery", "penalty": false, "entries": [["Luke", "71 avg"], ["Ted", "66 avg"], ["Regina", "62 avg"], ["Brady", "31 avg"], ["Ella", "26 avg"]]}, {"label": "Effort", "penalty": false, "entries": [["Luke", "100 vs your normal"], ["Brady", "100 vs your normal"], ["Ella", "100 vs your normal"], ["Ted", "86 vs your normal"], ["Regina", "0 vs your normal"]]}, {"label": "Restorative sleep", "penalty": false, "entries": [["Luke", "3h 28m deep+REM"], ["Brady", "2h 37m deep+REM"], ["Ella", "2h 19m deep+REM"], ["Ted", "2h 16m deep+REM"]]}, {"label": "Steps", "penalty": false, "entries": [["Ella", "21,279 steps"], ["Ted", "15,844 steps"], ["Brady", "11,871 steps"], ["Luke", "5,489 steps"], ["Regina", "3,196 steps"], ["Maleeya", "1,194 steps"]]}, {"label": "Cardio load", "penalty": false, "entries": [["Ted", "164 load"], ["Brady", "94 load"], ["Ella", "88 load"], ["Luke", "42 load"], ["Regina", "0 load"]]}, {"label": "Workouts", "penalty": false, "entries": [["Ella", "4 sessions"], ["Brady", "3 sessions"], ["Luke", "1 sessions"], ["Ted", "1 sessions"]]}, {"label": "Perfect days", "penalty": false, "entries": [["Luke", "1 of 7"], ["Brady", "1 of 7"], ["Ella", "1 of 7"]]}, {"label": "Most consistent", "penalty": false, "entries": []}, {"label": "Most improved", "penalty": false, "entries": []}, {"label": "Workout time", "penalty": false, "entries": [["Ella", "2h 34m total"], ["Luke", "1h 40m total"], ["Brady", "1h 09m total"], ["Ted", "0h 18m total"]]}, {"label": "Wear streak", "penalty": false, "entries": [["Luke", "1 day streak"], ["Brady", "1 day streak"], ["Maleeya", "1 day streak"], ["Ella", "1 day streak"], ["Regina", "1 day streak"], ["Ted", "1 day streak"]]}, {"label": "Couch of the week", "penalty": true, "entries": []}, {"label": "Longest sit", "penalty": true, "entries": [["Ella", "315 min without moving"], ["Regina", "161 min without moving"], ["Luke", "160 min without moving"], ["Brady", "117 min without moving"], ["Ted", "90 min without moving"]]}], "detail": [{"name": "Luke", "rank": 1, "of": 6, "daily": 79, "sleep_score": 75, "recovery": 71, "sleep_parts": [["Duration", "7h 16m asleep vs 7h 28m, your usual"], ["Efficiency", "95% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 42m deep + 1h 46m REM = 48% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "31 min from your usual bedtime"]], "rec_parts": [["HRV", "55ms vs 55 baseline (+0%, strong)"], ["Resting HR", "62 bpm vs 63 baseline (-2%, strong)"], ["Breathing", "14.8 br/min vs 14.8 baseline (+0%, strong)"]], "activity": [["Steps", "5,489"], ["Cardio load", "42"], ["Workouts", "1"]], "trend": [75, 56, 74, 76, 45, 42, 79]}, {"name": "Ted", "rank": 2, "of": 6, "daily": 77, "sleep_score": 83, "recovery": 66, "sleep_parts": [["Duration", "5h 38m asleep vs 5h 38m, your usual"], ["Efficiency", "97% of time in bed asleep (85% is already good)"], ["Deep+REM", "0h 50m deep + 1h 26m REM = 40% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "6 min from your usual bedtime"]], "rec_parts": [["HRV", "no reading"], ["Resting HR", "52 bpm vs 51 baseline (+2%, normal)"], ["Breathing", "no reading"]], "activity": [["Steps", "15,844"], ["Cardio load", "164"], ["Workouts", "1"]], "trend": [78, 70, 44, 59, 73, 39, 77]}, {"name": "Brady", "rank": 3, "of": 6, "daily": 63, "sleep_score": 75, "recovery": 31, "sleep_parts": [["Duration", "7h 41m asleep vs 7h 33m, your usual"], ["Efficiency", "87% of time in bed asleep (85% is already good)"], ["Deep+REM", "0h 37m deep + 2h 00m REM = 34% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "38 min from your usual bedtime"]], "rec_parts": [["HRV", "35ms vs 82 baseline (-58%, low)"], ["Resting HR", "57 bpm vs 55 baseline (+4%, normal)"], ["Breathing", "14.4 br/min vs 14.2 baseline (+1%, normal)"]], "activity": [["Steps", "11,871"], ["Cardio load", "94"], ["Workouts", "3"]], "trend": [60, 45, 75, 92, 86, 48, 63]}, {"name": "Ella", "rank": 4, "of": 6, "daily": 59, "sleep_score": 69, "recovery": 26, "sleep_parts": [["Duration", "9h 13m asleep vs 7h 46m, your usual"], ["Efficiency", "98% of time in bed asleep (85% is already good)"], ["Deep+REM", "1h 18m deep + 1h 01m REM = 25% of sleep"], ["Falling asleep", "0 min to fall asleep, which usually means sleep debt"], ["Regularity", "143 min from your usual bedtime"]], "rec_parts": [["HRV", "61ms vs 113 baseline (-46%, low)"], ["Resting HR", "56 bpm vs 59 baseline (-5%, strong)"], ["Breathing", "16.2 br/min vs 14.6 baseline (+11%, low)"]], "activity": [["Steps", "21,279"], ["Cardio load", "88"], ["Workouts", "4"]], "trend": [62, 55, 42, 67, 52, 58, 59]}, {"name": "Regina", "rank": 5, "of": 6, "daily": 39, "sleep_score": null, "recovery": 62, "sleep_parts": [], "rec_parts": [["HRV", "22ms vs 22 baseline (+0%, strong)"], ["Resting HR", "64 bpm vs 63 baseline (+2%, normal)"], ["Breathing", "12.0 br/min vs 11.8 baseline (+2%, normal)"]], "activity": [["Steps", "3,196"], ["Workouts", "0"]], "trend": [56, 47, 46, 77, 73, 63, 39]}, {"name": "Maleeya", "rank": 6, "of": 6, "daily": null, "sleep_score": null, "recovery": null, "sleep_parts": [], "rec_parts": [], "activity": [["Steps", "1,194"], ["Workouts", "0"]], "trend": [48, 75, 60, 73, null, null, null]}], "stamp": "2:14pm", "updated_iso": "2026-11-02T14:14:40.812137-05:00", "day_iso": "2026-11-01", "history": {"Luke": {"days": {"2026-10-03": {"daily": 79, "sleep": 83, "rec": 76, "asleep": 452, "deep": 90, "rem": 97, "effp": 93.8, "rr": 15.0, "hrv": 62.9, "rhr": 60.0}, "2026-10-04": {"daily": 65, "rec": 65, "rr": 15.6, "hrv": 62.1, "rhr": 60.0}, "2026-10-05": {"daily": 69, "sleep": 64, "rec": 74, "asleep": 438, "deep": 99, "rem": 121, "effp": 96.5, "rhr": 60.0}, "2026-10-06": {"daily": 82, "sleep": 75, "rec": 89, "asleep": 424, "deep": 71, "rem": 79, "effp": 98.8, "rr": 14.4, "hrv": 66.8, "rhr": 58.0}, "2026-10-07": {"daily": 78, "sleep": 66, "rec": 90, "asleep": 440, "deep": 101, "rem": 99, "effp": 93.0, "rr": 14.0, "hrv": 65.6, "rhr": 59.0}, "2026-10-08": {"daily": 50, "sleep": 74, "rec": 25, "asleep": 522, "deep": 101, "rem": 118, "effp": 96.8, "rr": 16.0, "hrv": 31.7, "rhr": 60.0}, "2026-10-09": {"daily": 60, "sleep": 80, "rec": 40, "asleep": 482, "deep": 110, "rem": 118, "effp": 98.6, "rr": 15.2, "hrv": 41.5, "rhr": 63.0}, "2026-10-10": {"daily": 64, "sleep": 68, "rec": 61, "asleep": 476, "deep": 76, "rem": 130, "effp": 97.3, "rr": 14.8, "hrv": 49.5, "rhr": 63.0}, "2026-10-11": {"daily": 74, "sleep": 64, "rec": 85, "asleep": 398, "deep": 61, "rem": 81, "effp": 94.5, "rr": 14.8, "hrv": 79.5, "rhr": 61.0}, "2026-10-12": {"daily": 82, "sleep": 82, "rec": 82, "asleep": 442, "deep": 85, "rem": 141, "effp": 97.8, "rr": 14.6, "hrv": 62.9, "rhr": 60.0}, "2026-10-13": {"daily": 68, "sleep": 76, "rec": 61, "asleep": 505, "deep": 94, "rem": 116, "effp": 94.9, "rr": 14.6, "hrv": 47.8, "rhr": 62.0}, "2026-10-14": {"daily": 82, "sleep": 84, "rec": 79, "asleep": 444, "deep": 97, "rem": 100, "effp": 99.1, "rr": 14.6, "hrv": 63.8, "rhr": 62.0}, "2026-10-15": {"daily": 70, "sleep": 81, "rec": 59, "asleep": 438, "deep": 89, "rem": 118, "effp": 99.1, "rr": 14.8, "hrv": 47.5, "rhr": 62.0}, "2026-10-16": {"daily": 74, "sleep": 73, "rec": 76, "asleep": 454, "deep": 88, "rem": 127, "effp": 99.3, "rr": 14.8, "hrv": 60.8, "rhr": 62.0}, "2026-10-17": {"daily": 68, "sleep": 86, "rec": 51, "asleep": 471, "deep": 94, "rem": 131, "effp": 98.3, "rr": 14.8, "hrv": 43.6, "rhr": 63.0}, "2026-10-18": {"daily": 70, "sleep": 82, "rec": 59, "asleep": 445, "deep": 60, "rem": 137, "effp": 99.3, "rr": 14.2, "hrv": 45.7, "rhr": 63.0}, "2026-10-19": {"daily": 72, "sleep": 81, "rec": 72, "effort": 54, "asleep": 455, "deep": 102, "rem": 108, "effp": 97.6, "rr": 14.8, "hrv": 58.1, "rhr": 63.0, "steps": 5633.0, "load": 13}, "2026-10-20": {"daily": 54, "sleep": 85, "rec": 55, "effort": 0, "asleep": 457, "deep": 94, "rem": 126, "effp": 97.6, "rr": 14.8, "hrv": 46.0, "rhr": 63.0, "steps": 7683.0, "load": 2}, "2026-10-21": {"daily": 54, "sleep": 66, "rec": 74, "effort": 0, "asleep": 458, "deep": 100, "rem": 117, "effp": 98.5, "rr": 14.6, "hrv": 58.2, "rhr": 63.0, "steps": 2303.0, "load": 3}, "2026-10-22": {"daily": 72, "sleep": 74, "rec": 70, "effort": 70, "asleep": 453, "deep": 68, "rem": 99, "effp": 96.8, "rhr": 63.0, "steps": 8621.0, "load": 15}, "2026-10-23": {"daily": 67, "sleep": 69, "rec": 63, "effort": 70, "asleep": 460, "deep": 94, "rem": 97, "effp": 98.5, "rr": 15.2, "hrv": 55.0, "rhr": 63.0, "steps": 18225.0, "load": 15, "wk": 7}, "2026-10-24": {"daily": 69, "sleep": 71, "rec": 49, "effort": 100, "asleep": 466, "deep": 73, "rem": 103, "effp": 98.5, "rr": 15.2, "hrv": 49.0, "rhr": 64.0, "steps": 17223.0, "load": 201, "wk": 3}, "2026-10-25": {"daily": 62, "sleep": 61, "rec": 40, "effort": 100, "asleep": 362, "deep": 103, "rem": 73, "effp": 86.6, "rr": 15.6, "hrv": 47.4, "rhr": 64.0, "steps": 12229.0, "load": 61, "wk": 2}, "2026-10-26": {"daily": 75, "sleep": 84, "rec": 64, "effort": 77, "asleep": 451, "deep": 64, "rem": 117, "effp": 96.6, "rr": 14.8, "hrv": 53.5, "rhr": 64.0, "steps": 5188.0, "load": 17, "wk": 2}, "2026-10-27": {"daily": 56, "sleep": 77, "rec": 67, "effort": 0, "asleep": 419, "deep": 94, "rem": 100, "effp": 87.1, "rr": 15.2, "hrv": 64.6, "rhr": 64.0, "steps": 12039.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 74, "sleep": 66, "rec": 79, "effort": 80, "asleep": 421, "deep": 75, "rem": 102, "effp": 98.8, "rr": 14.6, "hrv": 64.9, "rhr": 63.0, "steps": 8801.0, "load": 18, "wk": 2}, "2026-10-29": {"daily": 76, "rec": 63, "effort": 100, "rr": 15.2, "hrv": 55.3, "rhr": 63.0, "steps": 16869.0, "load": 31, "wk": 3}, "2026-10-30": {"daily": 45, "rec": 70, "effort": 0, "rhr": 63.0, "steps": 1940.0, "load": 0}, "2026-10-31": {"daily": 42, "sleep": 39, "rec": 70, "effort": 0, "asleep": 341, "deep": 69, "rem": 62, "effp": 74.5, "rhr": 63.0, "steps": 3108.0, "load": 0, "wk": 1}, "2026-11-01": {"daily": 79, "sleep": 75, "rec": 71, "effort": 100, "asleep": 436, "deep": 102, "rem": 106, "effp": 95.4, "rr": 14.8, "hrv": 55.0, "rhr": 62.0, "steps": 5489.0, "load": 42, "wk": 1}}, "base": {"dur": 448.0, "hrv": 55.0, "rhr": 63.0, "rr": 14.8}}, "Brady": {"days": {"2026-10-03": {"daily": 70, "sleep": 64, "rec": 75, "asleep": 471, "deep": 67, "rem": 77, "effp": 97.5, "rr": 14.0, "hrv": 82.5, "rhr": 53.0}, "2026-10-04": {"daily": 63, "sleep": 90, "rec": 35, "asleep": 526, "deep": 69, "rem": 112, "effp": 98.3, "rr": 14.6, "hrv": 44.3, "rhr": 55.0}, "2026-10-05": {"daily": 70, "sleep": 60, "rec": 80, "asleep": 361, "deep": 75, "rem": 67, "effp": 92.1, "rr": 14.2, "hrv": 95.6, "rhr": 53.0}, "2026-10-06": {"daily": 52, "sleep": 68, "rec": 35, "asleep": 504, "deep": 100, "rem": 81, "effp": 97.3, "rr": 14.6, "hrv": 33.0, "rhr": 55.0}, "2026-10-07": {"daily": 56, "sleep": 73, "rec": 40, "asleep": 453, "deep": 63, "rem": 106, "effp": 97.6, "rr": 14.0, "hrv": 57.0, "rhr": 56.0}, "2026-10-08": {"daily": 80, "sleep": 80, "rec": 81, "asleep": 467, "deep": 73, "rem": 103, "effp": 94.7, "rr": 13.8, "hrv": 94.9, "rhr": 54.0}, "2026-10-09": {"daily": 65, "sleep": 71, "rec": 59, "asleep": 454, "deep": 71, "rem": 85, "effp": 92.1, "rr": 14.8, "hrv": 81.0, "rhr": 54.0}, "2026-10-10": {"daily": 64, "sleep": 68, "rec": 60, "asleep": 485, "deep": 60, "rem": 102, "effp": 93.4, "rr": 14.8, "hrv": 81.7, "rhr": 54.0}, "2026-10-11": {"daily": 70, "sleep": 84, "rec": 55, "asleep": 487, "deep": 83, "rem": 90, "effp": 94.6, "rr": 14.0, "hrv": 66.0, "rhr": 54.0}, "2026-10-12": {"daily": 66, "sleep": 71, "rec": 61, "asleep": 428, "deep": 67, "rem": 93, "effp": 97.3, "rr": 15.2, "hrv": 97.2, "rhr": 54.0}, "2026-10-13": {"daily": 80, "sleep": 78, "rec": 83, "asleep": 445, "deep": 68, "rem": 90, "effp": 92.9, "rr": 14.0, "hrv": 102.4, "rhr": 54.0}, "2026-10-14": {"daily": 69, "sleep": 58, "rec": 81, "asleep": 358, "deep": 59, "rem": 72, "effp": 89.1, "rr": 14.2, "hrv": 97.0, "rhr": 53.0}, "2026-10-15": {"daily": 74, "sleep": 87, "rec": 60, "asleep": 484, "deep": 77, "rem": 120, "effp": 93.6, "rr": 14.6, "hrv": 78.7, "rhr": 54.0}, "2026-10-16": {"daily": 60, "sleep": 53, "rec": 68, "asleep": 408, "deep": 75, "rem": 106, "effp": 95.6, "rr": 14.4, "hrv": 85.5, "rhr": 55.0}, "2026-10-17": {"daily": 58, "sleep": 88, "rec": 27, "asleep": 582, "deep": 90, "rem": 164, "effp": 96.8, "rr": 14.6, "hrv": 37.4, "rhr": 57.0}, "2026-10-18": {"daily": 46, "sleep": 60, "rec": 32, "asleep": 395, "deep": 56, "rem": 64, "effp": 92.7, "rr": 14.0, "hrv": 36.0, "rhr": 58.0}, "2026-10-19": {"daily": 55, "sleep": 68, "rec": 74, "effort": 0, "asleep": 404, "deep": 67, "rem": 73, "effp": 96.7, "rr": 14.4, "hrv": 109.0, "rhr": 56.0, "steps": 7445.0, "load": 1}, "2026-10-20": {"daily": 78, "sleep": 71, "rec": 73, "effort": 100, "asleep": 445, "deep": 61, "rem": 90, "effp": 93.7, "rr": 13.8, "hrv": 89.2, "rhr": 56.0, "steps": 18595.0, "load": 45, "wk": 3}, "2026-10-21": {"daily": 44, "sleep": 75, "rec": 34, "effort": 5, "asleep": 438, "deep": 55, "rem": 104, "effp": 95.6, "rr": 14.4, "hrv": 60.0, "rhr": 57.0, "steps": 9020.0, "load": 4, "wk": 2}, "2026-10-22": {"daily": 62, "sleep": 74, "rec": 67, "effort": 31, "asleep": 475, "deep": 66, "rem": 101, "effp": 96.9, "rr": 14.4, "hrv": 83.4, "rhr": 55.0, "steps": 5580.0, "load": 6, "wk": 2}, "2026-10-23": {"daily": 81, "sleep": 66, "rec": 90, "effort": 92, "asleep": 436, "deep": 66, "rem": 92, "effp": 95.4, "rr": 13.2, "hrv": 129.1, "rhr": 55.0, "steps": 10120.0, "load": 13, "wk": 3}, "2026-10-24": {"daily": 51, "sleep": 76, "rec": 52, "effort": 5, "asleep": 472, "deep": 65, "rem": 88, "effp": 95.5, "rr": 14.0, "hrv": 64.7, "rhr": 55.0, "steps": 7167.0, "load": 4, "wk": 1}, "2026-10-25": {"daily": 58, "sleep": 79, "rec": 69, "effort": 0, "asleep": 480, "deep": 76, "rem": 88, "effp": 89.7, "rr": 14.2, "hrv": 81.6, "rhr": 55.0, "steps": 3771.0, "load": 3, "wk": 3}, "2026-10-26": {"daily": 60, "sleep": 48, "rec": 82, "effort": 44, "asleep": 336, "deep": 54, "rem": 65, "effp": 92.1, "rr": 13.6, "hrv": 93.8, "rhr": 54.0, "steps": 12240.0, "load": 7, "wk": 6}, "2026-10-27": {"daily": 45, "sleep": 69, "rec": 37, "effort": 18, "asleep": 434, "deep": 52, "rem": 88, "effp": 94.8, "rr": 14.6, "hrv": 59.9, "rhr": 55.0, "steps": 8216.0, "load": 5, "wk": 1}, "2026-10-28": {"daily": 75, "sleep": 70, "rec": 83, "effort": 70, "asleep": 431, "deep": 65, "rem": 60, "effp": 87.1, "rr": 13.6, "hrv": 93.0, "rhr": 53.0, "steps": 6293.0, "load": 9, "wk": 2}, "2026-10-29": {"daily": 92, "rec": 88, "effort": 100, "rr": 13.8, "hrv": 105.8, "rhr": 53.0, "steps": 5782.0, "load": 19, "wk": 2}, "2026-10-30": {"daily": 86, "sleep": 78, "effort": 100, "asleep": 504, "deep": 66, "rem": 137, "effp": 93.0, "steps": 22054.0, "load": 184, "wk": 8}, "2026-10-31": {"daily": 48, "sleep": 38, "rec": 27, "effort": 100, "asleep": 356, "deep": 45, "rem": 70, "effp": 90.8, "rr": 15.0, "hrv": 37.1, "rhr": 55.0, "steps": 18743.0, "load": 70, "wk": 4}, "2026-11-01": {"daily": 63, "sleep": 75, "rec": 31, "effort": 100, "asleep": 461, "deep": 37, "rem": 120, "effp": 86.8, "rr": 14.4, "hrv": 34.7, "rhr": 57.0, "steps": 11871.0, "load": 94, "wk": 3}}, "base": {"dur": 453.5, "hrv": 82.1, "rhr": 55.0, "rr": 14.2}}, "Maleeya": {"days": {"2026-10-03": {"daily": 72, "sleep": 74, "rec": 70, "asleep": 449, "deep": 79, "rem": 120, "effp": 93.3, "rr": 16.8, "hrv": 103.7, "rhr": 52.0}, "2026-10-04": {"daily": 71, "rec": 71, "rr": 18.0, "hrv": 127.7, "rhr": 51.0}, "2026-10-05": {"daily": 69, "sleep": 69, "asleep": 444, "deep": 8, "rem": 83, "effp": 98.9}, "2026-10-06": {"daily": 39, "sleep": 65, "rec": 13, "asleep": 550, "deep": 44, "rem": 58, "effp": 91.5, "rr": 22.2, "hrv": 16.1, "rhr": 55.0}, "2026-10-07": {"daily": 36, "sleep": 71, "rec": 0, "asleep": 591, "deep": 60, "rem": 91, "effp": 87.6, "rr": 22.8, "hrv": 14.6, "rhr": 59.0}, "2026-10-08": {"daily": 26, "sleep": 41, "rec": 12, "asleep": 354, "deep": 45, "rem": 78, "effp": 83.5, "rr": 18.0, "hrv": 15.5, "rhr": 59.0}, "2026-10-09": {"daily": 46, "sleep": 72, "rec": 21, "asleep": 487, "deep": 77, "rem": 85, "effp": 96.4, "rr": 17.4, "hrv": 49.7, "rhr": 60.0}, "2026-10-10": {"daily": 62, "sleep": 69, "rec": 55, "asleep": 479, "deep": 55, "rem": 79, "effp": 96.4, "rr": 17.6, "hrv": 130.7, "rhr": 58.0}, "2026-10-11": {"daily": 74, "sleep": 77, "rec": 71, "asleep": 462, "deep": 77, "rem": 113, "effp": 97.5, "rr": 17.2, "hrv": 130.5, "rhr": 55.0}, "2026-10-12": {"daily": 79, "sleep": 72, "rec": 86, "asleep": 494, "deep": 56, "rem": 134, "effp": 98.8, "rr": 16.8, "hrv": 164.6, "rhr": 53.0}, "2026-10-13": {"daily": 68, "sleep": 69, "rec": 66, "asleep": 491, "deep": 18, "rem": 76, "effp": 95.2, "rr": 18.6, "hrv": 171.6, "rhr": 52.0}, "2026-10-14": {"daily": 79, "sleep": 77, "rec": 81, "asleep": 506, "deep": 79, "rem": 92, "effp": 97.9, "rr": 16.4, "hrv": 113.8, "rhr": 51.0}, "2026-10-15": {"daily": 76, "sleep": 66, "rec": 86, "asleep": 449, "deep": 50, "rem": 68, "effp": 98.2, "rr": 16.8, "hrv": 129.1, "rhr": 50.0}, "2026-10-16": {"daily": 84, "sleep": 80, "rec": 87, "asleep": 667, "deep": 84, "rem": 180, "effp": 98.8, "rr": 17.0, "hrv": 135.1, "rhr": 50.0}, "2026-10-17": {"daily": 79, "sleep": 81, "rec": 78, "asleep": 504, "deep": 61, "rem": 110, "effp": 97.7, "rr": 17.4, "hrv": 118.6, "rhr": 50.0}, "2026-10-18": {"daily": 81, "sleep": 82, "rec": 80, "asleep": 496, "deep": 70, "rem": 116, "effp": 97.1, "rr": 17.0, "hrv": 110.3, "rhr": 49.0}, "2026-10-19": {"daily": 63, "sleep": 78, "rec": 85, "effort": 0, "asleep": 482, "deep": 62, "rem": 93, "effp": 98.6, "rr": 17.0, "hrv": 125.7, "rhr": 49.0, "steps": 11070.0, "load": 21}, "2026-10-20": {"daily": 88, "sleep": 81, "rec": 87, "effort": 100, "asleep": 517, "deep": 67, "rem": 137, "effp": 98.9, "rr": 15.8, "hrv": 109.0, "rhr": 48.0, "steps": 15528.0, "load": 216, "wk": 4}, "2026-10-21": {"daily": 61, "sleep": 63, "rec": 69, "effort": 42, "asleep": 488, "deep": 60, "rem": 134, "effp": 79.5, "rr": 17.6, "hrv": 108.3, "rhr": 51.0, "steps": 11433.0, "load": 94, "wk": 4}, "2026-10-22": {"daily": 79, "sleep": 78, "rec": 68, "effort": 100, "asleep": 539, "deep": 102, "rem": 157, "effp": 98.0, "rr": 17.6, "hrv": 109.4, "rhr": 52.0, "steps": 23810.0, "load": 393, "wk": 3}, "2026-10-23": {"daily": 61, "sleep": 86, "rec": 71, "effort": 0, "asleep": 501, "deep": 90, "rem": 124, "effp": 97.3, "rr": 17.4, "hrv": 112.3, "rhr": 53.0, "steps": 6941.0, "load": 4, "wk": 1}, "2026-10-24": {"daily": 73, "sleep": 69, "rec": 68, "effort": 87, "asleep": 472, "deep": 94, "rem": 134, "effp": 93.8, "rr": 17.0, "hrv": 109.1, "rhr": 54.0, "steps": 8495.0, "load": 166, "wk": 2}, "2026-10-25": {"daily": 54, "sleep": 72, "rec": 68, "effort": 0, "asleep": 449, "deep": 100, "rem": 124, "effp": 98.0, "rr": 16.8, "hrv": 103.1, "rhr": 53.0, "steps": 4214.0, "load": 0}, "2026-10-26": {"daily": 48, "sleep": 71, "rec": 53, "effort": 0, "asleep": 447, "deep": 81, "rem": 101, "effp": 97.6, "rr": 17.8, "hrv": 101.1, "rhr": 54.0, "steps": 8866.0, "load": 22, "wk": 1}, "2026-10-27": {"daily": 75, "sleep": 78, "rec": 69, "effort": 81, "asleep": 474, "deep": 88, "rem": 119, "effp": 98.1, "rr": 16.0, "hrv": 97.9, "rhr": 53.0, "steps": 13931.0, "load": 152, "wk": 2}, "2026-10-28": {"daily": 60, "sleep": 70, "rec": 59, "effort": 44, "asleep": 466, "deep": 84, "rem": 126, "effp": 98.9, "rr": 17.8, "hrv": 109.0, "rhr": 54.0, "steps": 12762.0, "load": 96, "wk": 3}, "2026-10-29": {"daily": 73, "rec": 58, "effort": 100, "rr": 18.0, "hrv": 113.8, "rhr": 54.0, "steps": 24827.0, "load": 409, "wk": 5}, "2026-10-30": {"effort": 0, "steps": 7691.0, "load": 0}, "2026-10-31": {"steps": 7067.0}, "2026-11-01": {"steps": 1194.0}}, "base": {"dur": 484.5, "hrv": 109.8, "rhr": 53.0, "rr": 17.4}}, "Ella": {"days": {"2026-10-03": {"daily": 69, "sleep": 61, "rec": 78, "asleep": 469, "deep": 47, "rem": 75, "effp": 93.2, "rr": 14.4, "hrv": 130.8, "rhr": 59.0}, "2026-10-04": {"daily": 74, "sleep": 72, "rec": 75, "asleep": 495, "deep": 84, "rem": 82, "effp": 96.9, "rr": 14.4, "hrv": 121.6, "rhr": 59.0}, "2026-10-05": {"daily": 76, "sleep": 76, "rec": 75, "asleep": 440, "deep": 63, "rem": 88, "effp": 96.7, "rr": 14.8, "hrv": 131.8, "rhr": 58.0}, "2026-10-06": {"daily": 78, "sleep": 86, "rec": 69, "asleep": 521, "deep": 64, "rem": 82, "effp": 97.7, "rr": 15.2, "hrv": 131.9, "rhr": 57.0}, "2026-10-07": {"daily": 78, "sleep": 73, "rec": 83, "asleep": 452, "deep": 48, "rem": 73, "effp": 96.4, "rr": 14.2, "hrv": 131.9, "rhr": 57.0}, "2026-10-08": {"daily": 64, "sleep": 61, "rec": 67, "asleep": 383, "deep": 54, "rem": 76, "effp": 97.5, "rr": 15.0, "hrv": 112.4, "rhr": 56.0}, "2026-10-09": {"daily": 76, "sleep": 72, "rec": 79, "asleep": 453, "deep": 64, "rem": 71, "effp": 96.0, "rr": 14.0, "hrv": 112.8, "rhr": 56.0}, "2026-10-10": {"daily": 71, "sleep": 81, "rec": 61, "asleep": 553, "deep": 86, "rem": 117, "effp": 97.5, "rr": 14.4, "hrv": 94.2, "rhr": 56.0}, "2026-10-11": {"daily": 54, "sleep": 44, "rec": 65, "asleep": 277, "deep": 48, "rem": 33, "effp": 83.9, "rr": 14.2, "hrv": 96.7, "rhr": 56.0}, "2026-10-12": {"daily": 58, "sleep": 69, "rec": 47, "asleep": 551, "deep": 46, "rem": 88, "effp": 96.8, "rr": 15.0, "hrv": 89.9, "rhr": 57.0}, "2026-10-13": {"daily": 56, "sleep": 60, "rec": 52, "asleep": 412, "deep": 51, "rem": 85, "effp": 98.1, "rr": 15.0, "hrv": 96.3, "rhr": 57.0}, "2026-10-14": {"daily": 76, "sleep": 80, "rec": 72, "asleep": 455, "deep": 69, "rem": 90, "effp": 98.3, "rr": 14.2, "hrv": 111.8, "rhr": 59.0}, "2026-10-15": {"daily": 62, "sleep": 65, "rec": 59, "asleep": 410, "deep": 57, "rem": 70, "effp": 96.7, "rr": 14.2, "hrv": 104.5, "rhr": 61.0}, "2026-10-16": {"daily": 68, "sleep": 76, "rec": 59, "asleep": 633, "deep": 56, "rem": 109, "effp": 94.8, "rr": 15.0, "hrv": 122.9, "rhr": 61.0}, "2026-10-17": {"daily": 70, "sleep": 75, "rec": 64, "asleep": 513, "deep": 83, "rem": 76, "effp": 90.8, "rr": 14.6, "hrv": 115.2, "rhr": 61.0}, "2026-10-18": {"daily": 65, "sleep": 68, "rec": 62, "asleep": 538, "deep": 66, "rem": 63, "effp": 93.7, "rr": 14.4, "hrv": 115.1, "rhr": 62.0}, "2026-10-19": {"daily": 60, "sleep": 72, "rec": 73, "effort": 16, "asleep": 481, "deep": 51, "rem": 92, "effp": 96.0, "rr": 14.4, "hrv": 136.9, "rhr": 61.0, "steps": 13392.0, "load": 15, "wk": 2}, "2026-10-20": {"daily": 72, "sleep": 62, "rec": 66, "effort": 100, "asleep": 406, "deep": 83, "rem": 87, "effp": 98.8, "rr": 14.6, "hrv": 122.1, "rhr": 61.0, "steps": 15816.0, "load": 124, "wk": 3}, "2026-10-21": {"daily": 48, "sleep": 87, "rec": 36, "effort": 0, "asleep": 512, "deep": 70, "rem": 105, "effp": 96.6, "rr": 14.4, "hrv": 83.0, "rhr": 62.0, "steps": 13103.0, "load": 5, "wk": 2}, "2026-10-22": {"daily": 68, "sleep": 61, "rec": 58, "effort": 100, "asleep": 422, "deep": 70, "rem": 57, "effp": 92.1, "rr": 14.8, "hrv": 111.2, "rhr": 61.0, "steps": 9863.0, "load": 126, "wk": 3}, "2026-10-23": {"daily": 43, "sleep": 75, "rec": 31, "effort": 8, "asleep": 507, "deep": 83, "rem": 72, "effp": 96.8, "rr": 14.4, "hrv": 80.3, "rhr": 63.0, "steps": 14991.0, "load": 13, "wk": 2}, "2026-10-24": {"daily": 59, "sleep": 81, "rec": 31, "effort": 70, "asleep": 586, "deep": 25, "rem": 62, "effp": 95.4, "rr": 15.2, "hrv": 96.2, "rhr": 63.0, "steps": 10469.0, "load": 28, "wk": 4}, "2026-10-25": {"daily": 74, "sleep": 82, "rec": 52, "effort": 100, "asleep": 495, "deep": 68, "rem": 81, "effp": 97.2, "rr": 15.0, "hrv": 112.5, "rhr": 62.0, "steps": 12150.0, "load": 106, "wk": 3}, "2026-10-26": {"daily": 62, "sleep": 48, "rec": 54, "effort": 100, "asleep": 380, "deep": 35, "rem": 38, "effp": 91.6, "rr": 14.8, "hrv": 105.6, "rhr": 61.0, "steps": 9708.0, "load": 103, "wk": 3}, "2026-10-27": {"daily": 55, "sleep": 74, "rec": 67, "effort": 0, "asleep": 466, "deep": 62, "rem": 59, "effp": 95.9, "rr": 14.6, "hrv": 112.8, "rhr": 60.0, "steps": 11546.0, "load": 0, "wk": 3}, "2026-10-28": {"daily": 42, "sleep": 49, "rec": 58, "effort": 0, "asleep": 343, "deep": 63, "rem": 51, "effp": 95.0, "rr": 15.4, "hrv": 111.5, "rhr": 57.0, "steps": 13883.0, "load": 7, "wk": 5}, "2026-10-29": {"daily": 67, "sleep": 57, "rec": 82, "effort": 58, "asleep": 401, "deep": 67, "rem": 30, "effp": 98.5, "rr": 14.6, "hrv": 134.4, "rhr": 56.0, "steps": 26576.0, "load": 25, "wk": 8}, "2026-10-30": {"daily": 52, "sleep": 77, "rec": 56, "effort": 0, "asleep": 448, "deep": 80, "rem": 58, "effp": 85.2, "rr": 15.0, "hrv": 100.2, "rhr": 57.0, "steps": 11747.0, "load": 4, "wk": 3}, "2026-10-31": {"daily": 58, "sleep": 32, "rec": 59, "effort": 100, "asleep": 293, "deep": 40, "rem": 33, "effp": 81.4, "rr": 15.6, "hrv": 114.2, "rhr": 55.0, "steps": 15775.0, "load": 57, "wk": 3}, "2026-11-01": {"daily": 59, "sleep": 69, "rec": 26, "effort": 100, "asleep": 553, "deep": 78, "rem": 61, "effp": 97.9, "rr": 16.2, "hrv": 60.9, "rhr": 56.0, "steps": 21279.0, "load": 88, "wk": 4}}, "base": {"dur": 466.0, "hrv": 112.5, "rhr": 59.0, "rr": 14.6}}, "Regina": {"days": {"2026-10-03": {"daily": 60, "sleep": 72, "rec": 47, "asleep": 382, "deep": 114, "rem": 101, "effp": 88.4, "rr": 12.8, "hrv": 20.7, "rhr": 62.0}, "2026-10-04": {"daily": 64, "sleep": 79, "rec": 50, "asleep": 375, "deep": 67, "rem": 53, "effp": 100.0, "rr": 12.0, "hrv": 18.0, "rhr": 63.0}, "2026-10-05": {"daily": 67, "sleep": 77, "rec": 57, "asleep": 399, "deep": 96, "rem": 97, "effp": 92.8, "rr": 11.4, "hrv": 19.1, "rhr": 65.0}, "2026-10-06": {"daily": 33, "rec": 33, "rr": 12.2, "hrv": 18.2, "rhr": 67.0}, "2026-10-07": {"daily": 87, "sleep": 87, "asleep": 434, "deep": 93, "rem": 82, "effp": 91.9}, "2026-10-08": {"daily": 46, "sleep": 66, "rec": 26, "asleep": 344, "deep": 80, "rem": 72, "effp": 77.1, "rr": 12.2, "hrv": 16.5, "rhr": 67.0}, "2026-10-09": {"daily": 54, "sleep": 72, "rec": 35, "asleep": 366, "deep": 78, "rem": 88, "effp": 70.9, "rr": 12.4, "hrv": 19.6, "rhr": 67.0}, "2026-10-10": {"daily": 53, "sleep": 76, "rec": 30, "asleep": 476, "deep": 84, "rem": 134, "effp": 83.8, "rr": 13.4, "hrv": 20.3, "rhr": 67.0}, "2026-10-11": {"daily": 51, "rec": 51, "rr": 13.0, "hrv": 26.4, "rhr": 65.0}, "2026-10-12": {"daily": 70, "sleep": 73, "rec": 67, "asleep": 456, "deep": 68, "rem": 114, "effp": 98.1, "rhr": 64.0}, "2026-10-13": {"daily": 76, "sleep": 96, "rec": 55, "asleep": 481, "deep": 76, "rem": 134, "effp": 96.8, "rr": 12.6, "hrv": 22.3, "rhr": 62.0}, "2026-10-14": {"daily": 81, "sleep": 89, "rec": 73, "asleep": 458, "deep": 91, "rem": 88, "effp": 96.2, "rr": 12.2, "hrv": 27.2, "rhr": 62.0}, "2026-10-15": {"daily": 62, "sleep": 50, "rec": 73, "asleep": 348, "deep": 42, "rem": 99, "effp": 67.1, "rr": 11.8, "hrv": 22.5, "rhr": 62.0}, "2026-10-16": {"daily": 80, "sleep": 85, "rec": 75, "asleep": 482, "deep": 80, "rem": 157, "effp": 94.1, "rr": 11.4, "hrv": 21.5, "rhr": 62.0}, "2026-10-17": {"daily": 64, "sleep": 51, "rec": 76, "asleep": 325, "deep": 65, "rem": 89, "effp": 70.7, "rr": 11.6, "hrv": 22.8, "rhr": 62.0}, "2026-10-18": {"daily": 76, "sleep": 75, "rec": 77, "asleep": 379, "deep": 88, "rem": 115, "effp": 87.3, "rr": 11.0, "hrv": 21.0, "rhr": 62.0}, "2026-10-19": {"daily": 37, "sleep": 26, "rec": 69, "effort": 0, "asleep": 173, "deep": 15, "rem": 77, "effp": 38.7, "rr": 12.0, "hrv": 22.4, "rhr": 62.0, "steps": 8051.0, "load": 2}, "2026-10-20": {"daily": 56, "rec": 81, "effort": 12, "rr": 11.2, "hrv": 23.7, "rhr": 62.0, "steps": 11360.0, "load": 4}, "2026-10-21": {"effort": 70, "steps": 2879.0, "load": 8}, "2026-10-22": {"daily": 54, "sleep": 85, "effort": 0, "asleep": 424, "deep": 65, "rem": 95, "effp": 85.1, "steps": 437.0, "load": 0}, "2026-10-23": {"daily": 80, "sleep": 70, "rec": 78, "effort": 100, "asleep": 420, "deep": 55, "rem": 76, "effp": 90.7, "rr": 11.6, "hrv": 24.6, "rhr": 63.0, "steps": 20553.0, "load": 92, "wk": 7}, "2026-10-24": {"daily": 58, "sleep": 92, "rec": 58, "effort": 0, "asleep": 464, "deep": 72, "rem": 141, "effp": 94.1, "rr": 12.0, "hrv": 20.6, "rhr": 64.0, "steps": 8687.0, "load": 0, "wk": 1}, "2026-10-25": {"daily": 63, "sleep": 69, "rec": 78, "effort": 26, "asleep": 345, "deep": 52, "rem": 117, "effp": 88.0, "rr": 11.6, "hrv": 24.6, "rhr": 63.0, "steps": 7271.0, "load": 5, "wk": 2}, "2026-10-26": {"daily": 56, "sleep": 65, "rec": 79, "effort": 0, "asleep": 349, "deep": 91, "rem": 94, "effp": 92.6, "rr": 11.0, "hrv": 22.4, "rhr": 63.0, "steps": 8249.0, "load": 1}, "2026-10-27": {"daily": 47, "sleep": 36, "rec": 85, "effort": 0, "asleep": 265, "deep": 65, "rem": 56, "effp": 83.9, "rr": 11.0, "hrv": 24.6, "rhr": 62.0, "steps": 7823.0, "load": 0, "wk": 1}, "2026-10-28": {"daily": 46, "rec": 72, "effort": 0, "rr": 11.8, "hrv": 22.4, "steps": 89.0, "load": 0}, "2026-10-29": {"daily": 77, "sleep": 83, "rec": 71, "effort": 76, "asleep": 383, "deep": 73, "rem": 103, "effp": 86.3, "rhr": 62.0, "steps": 6537.0, "load": 9, "wk": 2}, "2026-10-30": {"daily": 73, "sleep": 72, "rec": 65, "effort": 89, "asleep": 379, "deep": 74, "rem": 77, "effp": 93.3, "rr": 11.6, "hrv": 19.9, "rhr": 63.0, "steps": 9343.0, "load": 11, "wk": 1}, "2026-10-31": {"daily": 63, "sleep": 88, "rec": 34, "effort": 70, "asleep": 414, "deep": 108, "rem": 123, "effp": 85.5, "rr": 11.6, "hrv": 14.8, "rhr": 66.0, "steps": 10053.0, "load": 8, "wk": 2}, "2026-11-01": {"daily": 39, "rec": 62, "effort": 0, "rr": 12.0, "hrv": 21.5, "rhr": 64.0, "steps": 3196.0, "load": 0}}, "base": {"dur": 382.0, "hrv": 21.5, "rhr": 63.0, "rr": 11.8}}, "Ted": {"days": {"2026-10-18": {"daily": 79, "sleep": 85, "rec": 74, "asleep": 372, "deep": 65, "rem": 92, "effp": 98.7, "rhr": 49.0}, "2026-10-19": {"daily": 76, "sleep": 82, "rec": 70, "effort": 75, "asleep": 344, "deep": 60, "rem": 65, "effp": 89.8, "rr": 13.4, "hrv": 36.0, "rhr": 50.0, "steps": 13292.0, "load": 137, "wk": 1}, "2026-10-20": {"daily": 74, "sleep": 81, "rec": 68, "effort": 72, "asleep": 337, "deep": 68, "rem": 88, "effp": 89.2, "rr": 13.8, "hrv": 37.4, "rhr": 51.0, "steps": 14786.0, "load": 129, "wk": 1}, "2026-10-21": {"daily": 74, "sleep": 86, "rec": 75, "effort": 50, "asleep": 356, "deep": 67, "rem": 62, "effp": 93.2, "rr": 13.2, "hrv": 38.1, "rhr": 51.0, "steps": 14961.0, "load": 103, "wk": 1}, "2026-10-22": {"daily": 69, "sleep": 67, "rec": 69, "effort": 72, "asleep": 296, "deep": 52, "rem": 64, "effp": 97.0, "rr": 14.0, "hrv": 41.9, "rhr": 52.0, "steps": 14724.0, "load": 128, "wk": 1}, "2026-10-23": {"daily": 51, "sleep": 93, "rec": 39, "effort": 0, "asleep": 426, "deep": 103, "rem": 110, "effp": 97.5, "rr": 15.4, "hrv": 36.4, "rhr": 52.0, "steps": 22102.0, "load": 16, "wk": 7}, "2026-10-24": {"daily": 65, "sleep": 57, "rec": 68, "effort": 73, "asleep": 311, "deep": 76, "rem": 80, "effp": 97.8, "rr": 14.2, "hrv": 40.7, "rhr": 51.0, "steps": 10525.0, "load": 131, "wk": 3}, "2026-10-25": {"daily": 64, "sleep": 83, "rec": 62, "effort": 34, "asleep": 351, "deep": 75, "rem": 93, "effp": 90.5, "rr": 14.4, "hrv": 38.7, "rhr": 51.0, "steps": 11665.0, "load": 86, "wk": 2}, "2026-10-26": {"daily": 78, "sleep": 73, "rec": 83, "effort": 80, "asleep": 310, "deep": 67, "rem": 68, "effp": 88.8, "rr": 13.4, "hrv": 46.3, "rhr": 51.0, "steps": 14075.0, "load": 148, "wk": 1}, "2026-10-27": {"daily": 70, "sleep": 53, "rec": 82, "effort": 78, "asleep": 317, "deep": 83, "rem": 59, "effp": 64.4, "rr": 13.4, "hrv": 44.0, "rhr": 50.0, "steps": 19179.0, "load": 143}, "2026-10-28": {"daily": 44, "sleep": 32, "rec": 76, "effort": 7, "asleep": 239, "deep": 52, "rem": 52, "effp": 63.9, "rr": 13.2, "hrv": 38.7, "rhr": 51.0, "steps": 14706.0, "load": 57, "wk": 2}, "2026-10-29": {"daily": 59, "rec": 52, "effort": 70, "rr": 14.8, "hrv": 37.5, "rhr": 51.0, "steps": 17492.0, "load": 124, "wk": 1}, "2026-10-30": {"daily": 73, "sleep": 82, "rec": 66, "effort": 70, "asleep": 344, "deep": 63, "rem": 89, "effp": 93.0, "rhr": 52.0, "steps": 16106.0, "load": 124, "wk": 1}, "2026-10-31": {"daily": 39, "rec": 47, "effort": 26, "rr": 15.0, "hrv": 39.0, "rhr": 52.0, "steps": 14634.0, "load": 77, "wk": 2}, "2026-11-01": {"daily": 77, "sleep": 83, "rec": 66, "effort": 86, "asleep": 338, "deep": 50, "rem": 86, "effp": 96.8, "rhr": 52.0, "steps": 15844.0, "load": 164, "wk": 1}}, "base": {"dur": 338.0, "hrv": 38.7, "rhr": 51.0, "rr": 14.0}}}}</script>
 <script>
 (function(){
 const D = JSON.parse(document.getElementById('data').textContent);
@@ -155,19 +184,50 @@ const KEY = 'sleepboard_me';
 let me = null; try { me = localStorage.getItem(KEY); } catch(e) {}
 const names = Array.from(new Set([].concat(Object.keys(H), (D.detail||[]).map(x=>x.name), (D.sleep||[]).map(x=>x.name)))).sort();
 if (me && !names.includes(me)) me = null;
-let view = me;
+let view = me, tab = 'home', sheet = null, range = 14, board = 'rec';
 
+/* ---------- helpers ---------- */
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const band = v => v==null ? 'var(--faint)' : v>=67 ? 'var(--green)' : v>=34 ? 'var(--amber)' : 'var(--red)';
-const hm = m => m==null ? '' : Math.floor(m/60)+'h '+String(Math.round(m%60)).padStart(2,'0')+'m';
+const hm = m => m==null ? '\u2013' : Math.floor(m/60)+'h '+String(Math.round(m%60)).padStart(2,'0')+'m';
 const ord = n => { const s=['th','st','nd','rd'], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
 const iso = d => d.toISOString().slice(0,10);
 const addDays = (s,n) => { const d=new Date(s+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+n); return iso(d); };
-const DAY = D.day_iso || (()=>{ let best=null; for (const n in H) for (const k in H[n].days) if(!best||k>best) best=k; return best; })();
+const dow = s => ['Su','M','Tu','W','Th','F','Sa'][new Date(s+'T12:00:00Z').getUTCDay()];
+const longDay = s => new Date(s+'T12:00:00Z').toLocaleDateString('en-US',{weekday:'long',month:'short',day:'numeric',timeZone:'UTC'});
+const DAY = D.day_iso || (()=>{ let b=null; for (const n in H) for (const k in H[n].days) if(!b||k>b) b=k; return b; })();
 const TODAY = DAY ? addDays(DAY,1) : null;
 const rec = (n,k) => (H[n] && H[n].days[k]) || {};
+const base = n => (H[n]||{}).base || {};
 const detailOf = n => (D.detail||[]).find(x=>x.name===n);
-const nameBtn = n => '<button class="nmb" data-view="'+esc(n)+'">'+esc(n)+'</button>';
+const avg = a => { const b=a.filter(v=>v!=null); return b.length ? b.reduce((x,y)=>x+y,0)/b.length : null; };
+const days = n => { const k=[]; for (let i=n-1;i>=0;i--) k.push(addDays(DAY,-i)); return k; };
+const COLORS = ['#E8735A','#4DA3FF','#3DDC84','#B07CF5','#F5B83D','#2EC4B6','#F2605C','#8A9BFF'];
+const colorOf = n => COLORS[names.indexOf(n) % COLORS.length];
+
+/* Strain: 0 to 21, built from heart-rate zone load plus steps, on a log curve like WHOOP's */
+const strainOf = r => (r.load==null && r.steps==null) ? null : 21*(1-Math.exp(-((r.load||0)+(r.steps||0)/400)/120));
+const restor = r => (r.deep==null && r.rem==null) ? null : (r.deep||0)+(r.rem||0);
+
+const M = {
+  rec:    {label:'Recovery', get:r=>r.rec, fmt:v=>Math.round(v)+'%', max:100, col:band, hi:true},
+  sleep:  {label:'Sleep', get:r=>r.sleep, fmt:v=>Math.round(v)+'%', max:100, col:band, hi:true},
+  strain: {label:'Strain', get:strainOf, fmt:v=>v.toFixed(1), max:21, col:()=> 'var(--strain)', hi:true},
+  daily:  {label:'Daily score', get:r=>r.daily, fmt:v=>Math.round(v), max:100, col:band, hi:true},
+  hrv:    {label:'HRV', get:r=>r.hrv, fmt:v=>Math.round(v)+' ms', col:()=> 'var(--green)', hi:true, base:'hrv'},
+  rhr:    {label:'Resting HR', get:r=>r.rhr, fmt:v=>Math.round(v)+' bpm', col:()=> 'var(--red)', hi:false, base:'rhr'},
+  rr:     {label:'Resp. rate', get:r=>r.rr, fmt:v=>v.toFixed(1)+' rpm', col:()=> 'var(--sleepc)', hi:null, base:'rr'},
+  asleep: {label:'Hours asleep', get:r=>r.asleep, fmt:hm, col:()=> 'var(--sleepc)', hi:true, base:'dur'},
+  restor: {label:'Deep + REM', get:restor, fmt:hm, col:()=> 'var(--remc)', hi:true},
+  steps:  {label:'Steps', get:r=>r.steps, fmt:v=>Math.round(v).toLocaleString(), col:()=> 'var(--amber)', hi:true},
+  load:   {label:'Cardio load', get:r=>r.load, fmt:v=>Math.round(v), col:()=> 'var(--strain)', hi:true},
+};
+const val = (m,n,k) => { const v=M[m].get(rec(n,k)); return v==null||isNaN(v)?null:v; };
+
+function famRank(m, k){
+  const hi = M[m].hi!==false;
+  return names.map(n=>[n,val(m,n,k)]).filter(x=>x[1]!=null).sort((a,b)=>hi?b[1]-a[1]:a[1]-b[1]);
+}
 
 /* ---------- matchups ---------- */
 function pairings(dayIso){
@@ -178,17 +238,14 @@ function pairings(dayIso){
   const idx = Math.round((Date.parse(dayIso+'T12:00:00Z') - Date.parse('2026-01-01T12:00:00Z'))/864e5);
   const r = ((idx % rounds) + rounds) % rounds;
   const rest = list.slice(1);
-  const rot = rest.slice(r).concat(rest.slice(0,r));
-  const arr = [list[0]].concat(rot);
+  const arr = [list[0]].concat(rest.slice(r).concat(rest.slice(0,r)));
   const pairs=[]; let bye=null;
-  for (let i=0;i<m/2;i++){
-    const a=arr[i], b=arr[m-1-i];
-    if (a===null) bye=b; else if (b===null) bye=a; else pairs.push([a,b]);
-  }
+  for (let i=0;i<m/2;i++){ const a=arr[i], b=arr[m-1-i];
+    if (a===null) bye=b; else if (b===null) bye=a; else pairs.push([a,b]); }
   return {pairs, bye};
 }
 function result(a,b,k){
-  const sa = rec(a,k).daily, sb = rec(b,k).daily;
+  const sa=rec(a,k).daily, sb=rec(b,k).daily;
   if (sa==null && sb==null) return null;
   if (sb==null) return {w:a,l:b,sa,sb};
   if (sa==null) return {w:b,l:a,sa,sb};
@@ -196,225 +253,332 @@ function result(a,b,k){
   return sa>sb ? {w:a,l:b,sa,sb} : {w:b,l:a,sa,sb};
 }
 function record(){
-  const t={}; names.forEach(n=>t[n]={w:0,l:0,t:0});
+  const t={}; names.forEach(n=>t[n]={w:0,l:0,t:0,streak:0});
   if (!DAY) return t;
-  for (let i=0;i<30;i++){
-    const k = addDays(DAY,-i);
-    pairings(k).pairs.forEach(([a,b])=>{
-      const r=result(a,b,k); if(!r) return;
-      if (r.tie){ t[a].t++; t[b].t++; } else { t[r.w].w++; t[r.l].l++; }
-    });
+  for (let i=29;i>=0;i--){ const k=addDays(DAY,-i);
+    pairings(k).pairs.forEach(([a,b])=>{ const r=result(a,b,k); if(!r) return;
+      if (r.tie){ t[a].t++; t[b].t++; t[a].streak=0; t[b].streak=0; }
+      else { t[r.w].w++; t[r.l].l++; t[r.w].streak=Math.max(1,t[r.w].streak+1); t[r.l].streak=0; } });
   }
   return t;
 }
+function streak(n, test){ let s=0; if(!DAY) return 0;
+  for (let i=0;i<60;i++){ if(test(rec(n,addDays(DAY,-i)))) s++; else break; } return s; }
 
-/* ---------- streaks ---------- */
-function streak(n, test){
-  let s=0; if(!DAY) return 0;
-  for (let i=0;i<60;i++){ const r=rec(n,addDays(DAY,-i)); if(test(r)) s++; else break; }
-  return s;
-}
-
-/* ---------- rings ---------- */
-function ring(v, size, sw, glow){
-  const r=(size-sw)/2, c=2*Math.PI*r, pct=v==null?0:Math.max(0,Math.min(100,v))/100;
-  const col=band(v);
-  return '<svg class="ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+(v==null?'no reading':Math.round(v)+' of 100')+'">'+
+/* ---------- drawing ---------- */
+function ring(v, max, size, sw, col, label){
+  const r=(size-sw)/2, c=2*Math.PI*r, pct=v==null?0:Math.max(0,Math.min(max,v))/max;
+  return '<svg class="ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+esc(label)+'">'+
     '<circle class="trk" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke-width="'+sw+'"/>'+
-    '<circle class="arc" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round"'+
-    ' stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+c.toFixed(1)+'" data-off="'+(c*(1-pct)).toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/>'+
-    '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="currentColor" style="font-family:var(--disp);font-weight:800;font-size:'+(size*0.3)+'px">'+(v==null?'\u2013':Math.round(v))+'</text>'+
-  '</svg>';
+    '<circle class="arc" cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round" stroke-dasharray="'+c.toFixed(1)+'" stroke-dashoffset="'+c.toFixed(1)+'" data-off="'+(c*(1-pct)).toFixed(1)+'" transform="rotate(-90 '+size/2+' '+size/2+')"/>'+
+    '<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" fill="currentColor" style="font-family:var(--disp);font-weight:800;font-size:'+(size*0.27)+'px">'+label+'</text></svg>';
+}
+/* bar chart: vals[], keys[], colour fn, max, optional average line */
+function bars(vals, keys, colFn, max, avgV, h){
+  h=h||150; const W=340, pad=18, n=vals.length, bw=(W-8)/n;
+  const mx = max || Math.max.apply(null, vals.filter(v=>v!=null).concat([1]))*1.12;
+  let s='<svg class="chart" viewBox="0 0 '+W+' '+(h+pad)+'" preserveAspectRatio="none">';
+  vals.forEach((v,i)=>{ const x=4+i*bw+bw*0.18, w=bw*0.64;
+    if (v==null){ s+='<rect x="'+x.toFixed(1)+'" y="'+(h-3)+'" width="'+w.toFixed(1)+'" height="3" rx="1.5" fill="var(--card2)"/>'; }
+    else { const bh=Math.max(3,h*v/mx); s+='<rect x="'+x.toFixed(1)+'" y="'+(h-bh).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="'+Math.min(5,w/2).toFixed(1)+'" fill="'+colFn(v)+'"/>'; }
+    if (n<=14 || i%3===n%3-1 || i===n-1) s+='<text x="'+(4+i*bw+bw/2).toFixed(1)+'" y="'+(h+13)+'" text-anchor="middle">'+(n<=14?dow(keys[i]):keys[i].slice(5).replace('-','/'))+'</text>';
+  });
+  if (avgV!=null){ const y=h-h*avgV/mx; s+='<line x1="0" x2="'+W+'" y1="'+y.toFixed(1)+'" y2="'+y.toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="4 4" stroke-width="1"/>'; }
+  return s+'</svg>';
+}
+/* multi-line chart for comparing people */
+function lines(series, keys, h){
+  h=h||150; const W=340, pad=18, n=keys.length;
+  const all=[].concat.apply([], series.map(s=>s.vals)).filter(v=>v!=null);
+  if (!all.length) return '<p class="note">No readings yet.</p>';
+  let lo=Math.min.apply(null,all), hi=Math.max.apply(null,all); if (hi===lo){hi+=1;lo-=1;}
+  const sp=(hi-lo)*0.12; lo-=sp; hi+=sp;
+  const X=i=>4+(W-8)*i/(n-1||1), Y=v=>h-h*(v-lo)/(hi-lo);
+  let s='<svg class="chart" viewBox="0 0 '+W+' '+(h+pad)+'" preserveAspectRatio="none">';
+  series.forEach(se=>{ let d=''; let pen=false;
+    se.vals.forEach((v,i)=>{ if(v==null){pen=false;return;} d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1); pen=true; });
+    s+='<path d="'+d+'" fill="none" stroke="'+se.col+'" stroke-width="'+(se.bold?3:1.6)+'" stroke-linejoin="round" stroke-linecap="round" opacity="'+(se.bold?1:.7)+'"/>';
+    const li=se.vals.map((v,i)=>v==null?-1:i).filter(i=>i>=0).pop();
+    if (li!=null && li>=0) s+='<circle cx="'+X(li).toFixed(1)+'" cy="'+Y(se.vals[li]).toFixed(1)+'" r="'+(se.bold?4:2.5)+'" fill="'+se.col+'"/>';
+  });
+  [0, Math.floor((n-1)/2), n-1].forEach(i=>{ s+='<text x="'+X(i).toFixed(1)+'" y="'+(h+13)+'" text-anchor="'+(i===0?'start':i===n-1?'end':'middle')+'">'+keys[i].slice(5).replace('-','/')+'</text>'; });
+  return s+'</svg>';
+}
+function stageBars(n, keys){
+  const W=340,h=150,pad=18,bw=(W-8)/keys.length;
+  const vals=keys.map(k=>rec(n,k)); const mx=Math.max.apply(null, vals.map(r=>r.asleep||0).concat([480]))*1.08;
+  let s='<svg class="chart" viewBox="0 0 '+W+' '+(h+pad)+'" preserveAspectRatio="none">';
+  vals.forEach((r,i)=>{ const x=4+i*bw+bw*0.18, w=bw*0.64; let y=h;
+    if (r.asleep==null){ s+='<rect x="'+x.toFixed(1)+'" y="'+(h-3)+'" width="'+w.toFixed(1)+'" height="3" fill="var(--card2)"/>'; }
+    else { const parts=[[r.deep||0,'var(--deepc)'],[r.rem||0,'var(--remc)'],[Math.max(0,r.asleep-(r.deep||0)-(r.rem||0)),'var(--lightc)']];
+      parts.forEach(p=>{ const bh=h*p[0]/mx; y-=bh; s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+bh.toFixed(1)+'" fill="'+p[1]+'"/>'; }); }
+    s+='<text x="'+(4+i*bw+bw/2).toFixed(1)+'" y="'+(h+13)+'" text-anchor="middle">'+dow(keys[i])+'</text>';
+  });
+  const need=base(n).dur; if (need){ const yy=h-h*need/mx; s+='<line x1="0" x2="'+W+'" y1="'+yy.toFixed(1)+'" y2="'+yy.toFixed(1)+'" stroke="var(--muted)" stroke-dasharray="4 4"/>'; }
+  return s+'</svg>';
+}
+function devRow(label, v, b, fmt, goodHigh, note){
+  if (v==null) return '<div class="contrib"><span class="n">'+label+'</span><span class="v">\u2013</span><span class="m">No reading</span></div>';
+  let html='<div class="contrib"><span class="n">'+label+'</span><span class="v">'+fmt(v)+'</span>';
+  if (b){ const p=(v-b)/b; const good = goodHigh==null ? Math.abs(p)<0.05 : (goodHigh ? p>=0 : p<=0);
+    const w=Math.min(50, Math.abs(p)*250); const col= good?'var(--green)':'var(--red)';
+    html+='<span class="m">'+(note||('Normal '+fmt(b)+', '+(p>=0?'+':'')+Math.round(p*100)+'%'))+'</span>'+
+      '<span class="dev"><b></b><i style="'+(p>=0?'left:50%':'right:50%')+';width:'+w.toFixed(1)+'%;background:'+col+'"></i></span>';
+  } else if (note) html+='<span class="m">'+note+'</span>';
+  return html+'</div>';
+}
+function famBars(m, k){
+  const r=famRank(m,k); if(!r.length) return '<p class="note">No readings.</p>';
+  const mx=M[m].max || Math.max.apply(null, r.map(x=>x[1]))*1.05;
+  return r.map((x,i)=>'<button class="row tap'+(x[0]===view?' me':'')+'" data-view="'+esc(x[0])+'"><div class="rt"><span class="n"><span class="rank">'+(i+1)+'</span>'+esc(x[0])+'</span><span class="v">'+M[m].fmt(x[1])+'</span></div>'+
+    '<div class="bar"><i style="width:'+(100*x[1]/mx).toFixed(1)+'%;background:'+M[m].col(x[1])+'"></i></div></button>').join('');
 }
 
-/* ---------- why line ---------- */
+/* ---------- header pieces ---------- */
+function header(){
+  let ago='', stale=false;
+  if (D.updated_iso){ const mins=Math.round((Date.now()-Date.parse(D.updated_iso))/6e4); stale=mins>180;
+    ago = mins<2?'just now': mins<60? mins+' min ago' : mins<1440? Math.round(mins/60)+'h ago' : Math.round(mins/1440)+'d ago'; }
+  return '<div class="top"><div><div class="day">'+(DAY?longDay(DAY):'')+'</div><div class="sub">Last full day of scores</div></div>'+
+    '<span class="pill'+(stale?' stale':'')+'"><span class="dot"></span>Updated '+esc(D.stamp||'')+(ago?', '+ago:'')+'</span></div>';
+}
+function winStrip(){
+  if (!DAY) return '';
+  const y=pairings(DAY); const items=[];
+  const top=famRank('daily',DAY)[0];
+  if (top) items.push('<button class="win tap" data-tab="h2h"><span class="crown">\u265B</span><b>'+esc(top[0])+'</b> won the day<div class="s">daily score '+Math.round(top[1])+'</div></button>');
+  y.pairs.forEach(([a,b])=>{ const r=result(a,b,DAY); if(!r||r.tie) return;
+    items.push('<button class="win tap" data-tab="h2h"><span class="crown">\u2714</span><b>'+esc(r.w)+'</b> beat '+esc(r.l)+'<div class="s">'+(r.sa!=null&&r.sb!=null?Math.round(Math.max(r.sa,r.sb))+' to '+Math.round(Math.min(r.sa,r.sb)):'no-show')+'</div></button>'); });
+  return items.length?'<div class="wins">'+items.join('')+'</div>':'';
+}
+function whoStrip(){
+  const o = me ? [me].concat(names.filter(n=>n!==me)) : names;
+  return '<div class="who">'+o.map(n=>'<button data-view="'+esc(n)+'" aria-pressed="'+(n===view)+'">'+esc(n)+(n===me?' (you)':'')+'</button>').join('')+'</div>';
+}
 function whyLine(n){
-  const r=rec(n,DAY), b=(H[n]||{}).base||{};
-  const bits=[];
-  if (r.asleep!=null && b.dur){
-    const d=Math.round(r.asleep-b.dur);
-    if (Math.abs(d)>=10) bits.push({w:Math.abs(d)/b.dur, t:'Slept <b>'+Math.abs(d)+' min '+(d>0?'more':'less')+'</b> than usual'});
-    else bits.push({w:0.01, t:'Slept your usual <b>'+hm(r.asleep)+'</b>'});
-  } else if (r.asleep!=null) bits.push({w:0.01,t:'Slept <b>'+hm(r.asleep)+'</b>'});
-  if (r.hrv!=null && b.hrv){
-    const p=Math.round(100*(r.hrv-b.hrv)/b.hrv);
-    if (Math.abs(p)>=5) bits.push({w:Math.abs(p)/100, t:'HRV <b>'+Math.abs(p)+'% '+(p>0?'above':'below')+'</b> your normal'});
-  }
-  if (r.rhr!=null && b.rhr){
-    const d=Math.round(r.rhr-b.rhr);
-    if (Math.abs(d)>=2) bits.push({w:Math.abs(d)/b.rhr, t:'resting heart rate <b>'+Math.abs(d)+' bpm '+(d<0?'lower':'higher')+'</b> than normal'});
-  }
-  if (!bits.length) return r.daily==null ? 'No sleep or recovery reading for last night yet.' : '';
-  bits.sort((a,b)=>b.w-a.w);
-  const s=bits.slice(0,2).map(x=>x.t);
-  s[0]=s[0].charAt(0).toUpperCase()+s[0].slice(1);
-  if (s[1]) s[1]=s[1].charAt(0).toLowerCase()+s[1].slice(1);
+  const r=rec(n,DAY), b=base(n), bits=[];
+  if (r.asleep!=null && b.dur){ const d=Math.round(r.asleep-b.dur);
+    bits.push({w:Math.abs(d)/b.dur, t: Math.abs(d)>=10 ? 'Slept <b>'+Math.abs(d)+' min '+(d>0?'more':'less')+'</b> than usual' : 'Slept your usual <b>'+hm(r.asleep)+'</b>'}); }
+  if (r.hrv!=null && b.hrv){ const p=Math.round(100*(r.hrv-b.hrv)/b.hrv); if (Math.abs(p)>=5) bits.push({w:Math.abs(p)/100, t:'HRV <b>'+Math.abs(p)+'% '+(p>0?'above':'below')+'</b> normal'}); }
+  if (r.rhr!=null && b.rhr){ const d=Math.round(r.rhr-b.rhr); if (Math.abs(d)>=2) bits.push({w:Math.abs(d)/b.rhr, t:'resting HR <b>'+Math.abs(d)+' bpm '+(d<0?'lower':'higher')+'</b>'}); }
+  if (!bits.length) return r.daily==null?'No reading for last night yet.':'';
+  bits.sort((a,b)=>b.w-a.w); const s=bits.slice(0,2).map(x=>x.t);
+  s[0]=s[0].charAt(0).toUpperCase()+s[0].slice(1); if(s[1]) s[1]=s[1].charAt(0).toLowerCase()+s[1].slice(1);
   return s.join(', and ')+'.';
 }
 
-/* ---------- sections ---------- */
-function whoStrip(){
-  const ordered = me ? [me].concat(names.filter(n=>n!==me)) : names;
-  return '<nav class="who" aria-label="Choose a person">'+ordered.map(n=>
-    '<button data-view="'+esc(n)+'" aria-pressed="'+(n===view)+'">'+esc(n)+(n===me?'<span class="me">(you)</span>':'')+'</button>').join('')+'</nav>';
-}
-
-function picker(){
-  return '<section class="pick"><h1>Who are you?</h1><p>Pick your name once. This page will open on your morning every time.</p><div class="grid">'+
-    names.map(n=>'<button data-me="'+esc(n)+'">'+esc(n)+'</button>').join('')+'</div></section>';
-}
-
-function hero(n){
-  const r=rec(n,DAY), det=detailOf(n);
-  const rank = det && det.daily!=null ? ord(det.rank)+' of '+det.of+' yesterday' : 'Not ranked yesterday';
-  const wear = streak(n, x=>x.asleep!=null);
-  const green = streak(n, x=>x.rec!=null && x.rec>=67);
-  const recs = Object.values((H[n]||{}).days||{}).map(x=>x.rec).filter(v=>v!=null);
-  const best = r.rec!=null && recs.length>=7 && r.rec>=Math.max.apply(null,recs);
+/* ---------- tabs ---------- */
+function home(){
+  const n=view, r=rec(n,DAY), b=base(n), det=detailOf(n);
+  const st=strainOf(r);
+  const prev=rec(n,addDays(DAY,-1));
+  const tile=(m,k,v,fmt,unit,cmp,goodHigh)=>{
+    let d=''; if (v!=null && cmp!=null){ const diff=v-cmp; const good=goodHigh==null?null:(goodHigh?diff>=0:diff<=0);
+      d='<div class="d '+(good==null?'':good?'up':'down')+'">'+(diff>=0?'\u25B2 ':'\u25BC ')+fmt(Math.abs(diff))+' vs normal</div>'; }
+    return '<button class="tile tap" data-sheet="'+m+'"><div class="k">'+k+'</div><div class="v">'+(v==null?'\u2013':fmt(v))+(unit&&v!=null?'<small>'+unit+'</small>':'')+'</div>'+d+'</button>'; };
+  const wear=streak(n,x=>x.asleep!=null), green=streak(n,x=>x.rec!=null&&x.rec>=67);
+  const recs=Object.values((H[n]||{}).days||{}).map(x=>x.rec).filter(v=>v!=null);
   const chips=[];
+  if (det && det.daily!=null) chips.push('<span class="chip">'+ord(det.rank)+' of '+det.of+' yesterday, daily score '+Math.round(det.daily)+'</span>');
   if (wear>=2) chips.push('<span class="chip">'+wear+' nights worn in a row</span>');
   if (green>=2) chips.push('<span class="chip hot">'+green+' green days in a row</span>');
-  if (best) chips.push('<span class="chip hot">Best recovery in 30 days</span>');
-  const greet = n===me ? 'Good morning, '+esc(n) : esc(n)+'\u2019s morning';
-  let more='';
-  if (det){
-    const part=(t,rows)=>rows&&rows.length?'<div class="ph">'+t+'</div>'+rows.map(x=>'<div class="pr"><span>'+esc(x[0])+'</span><span>'+esc(x[1])+'</span></div>').join(''):'';
-    more='<details class="more"><summary>Full breakdown</summary>'+part('Sleep',det.sleep_parts)+part('Recovery',det.rec_parts)+part('Activity',det.activity)+'</details>';
-  }
-  const claim = (me!==n) ? '<button class="claim" data-me="'+esc(n)+'">This is me</button>' : '';
-  return '<section class="hero" style="--glow:'+band(r.rec)+'">'+
-    '<h1 class="greet">'+greet+'</h1>'+
-    '<p class="when">'+esc(D.day||'')+'<br>Daily score '+(r.daily!=null?'<b>'+Math.round(r.daily)+'</b>':'\u2013')+', '+rank+'</p>'+
-    '<div class="rings"><div class="big">'+ring(r.rec,168,16)+'<div class="rlab">Recovery</div></div>'+
-      '<div class="small">'+
-        '<div class="mini">'+ring(r.sleep,74,8)+'<div><div class="t">Sleep</div><div class="s">'+(r.asleep!=null?hm(r.asleep):'no reading')+'</div></div></div>'+
-        '<div class="mini">'+ring(r.effort,74,8)+'<div><div class="t">Effort</div><div class="s">'+(r.load!=null?'load '+Math.round(r.load):'vs your normal')+'</div></div></div>'+
-      '</div></div>'+
+  if (r.rec!=null && recs.length>=7 && r.rec>=Math.max.apply(null,recs)) chips.push('<span class="chip hot">Best recovery in 30 days</span>');
+  const t=pairings(TODAY), p=t.pairs.find(x=>x.includes(n));
+  const tr=record()[n]||{w:0,l:0};
+  let nx='';
+  if (p){ const o=p[0]===n?p[1]:p[0]; nx='<button class="card tap sec" data-tab="h2h"><h3>Today\u2019s 1v1</h3><div class="vsbox"><span class="big">'+esc(n)+' vs '+esc(o)+'</span><span class="note" style="margin:0;text-align:right">Your record '+tr.w+'\u2013'+tr.l+'<br>'+esc(o)+' '+(record()[o]||{w:0}).w+'\u2013'+(record()[o]||{l:0}).l+'</span></div><div class="meta">Decided by tonight\u2019s sleep and today\u2019s activity.</div></button>'; }
+  return whoStrip()+
+    '<div class="dials">'+
+      '<button class="dial tap" data-sheet="sleep">'+ring(r.sleep,100,92,9,band(r.sleep),r.sleep==null?'\u2013':Math.round(r.sleep)+'%')+'<span class="lab">Sleep</span><span class="more">'+hm(r.asleep)+'</span></button>'+
+      '<button class="dial tap" data-sheet="rec">'+ring(r.rec,100,92,9,band(r.rec),r.rec==null?'\u2013':Math.round(r.rec)+'%')+'<span class="lab">Recovery</span><span class="more">'+(r.hrv!=null?Math.round(r.hrv)+' ms HRV':'\u00a0')+'</span></button>'+
+      '<button class="dial tap" data-sheet="strain">'+ring(st,21,92,9,'var(--strain)',st==null?'\u2013':st.toFixed(1))+'<span class="lab">Strain</span><span class="more">'+(r.steps!=null?Math.round(r.steps).toLocaleString()+' steps':'\u00a0')+'</span></button>'+
+    '</div>'+
     '<p class="why">'+whyLine(n)+'</p>'+
     (chips.length?'<div class="chips">'+chips.join('')+'</div>':'')+
-    more+claim+
-  '</section>';
+    nx+
+    '<div class="sec"><h3>Key metrics, tap for trends</h3><div class="tiles">'+
+      tile('hrv','HRV',r.hrv,v=>Math.round(v),'ms',b.hrv,true)+
+      tile('rhr','Resting HR',r.rhr,v=>Math.round(v),'bpm',b.rhr,false)+
+      tile('rr','Resp. rate',r.rr,v=>v.toFixed(1),'rpm',b.rr,null)+
+      tile('asleep','Asleep',r.asleep,hm,'',b.dur,true)+
+      tile('restor','Deep + REM',restor(r),hm,'',null,true)+
+      tile('steps','Steps',r.steps,v=>Math.round(v).toLocaleString(),'',null,true)+
+    '</div></div>'+
+    '<div class="sec card"><h3>Recovery vs strain, last 14 days</h3>'+
+      lines([{vals:days(14).map(k=>val('rec',n,k)),col:'var(--green)',bold:true},{vals:days(14).map(k=>{const s=val('strain',n,k);return s==null?null:s*100/21;}),col:'var(--strain)',bold:true}],days(14),120)+
+      '<div class="legend"><span><i style="background:var(--green)"></i>Recovery %</span><span><i style="background:var(--strain)"></i>Strain (scaled to 100)</span></div></div>';
 }
 
-function matchups(){
-  if (!DAY || names.length<2) return '';
-  const focus = view || me;
-  const y = pairings(DAY);
-  const order = y.pairs.slice().sort((p,q)=>(q.includes(focus)?1:0)-(p.includes(focus)?1:0));
-  const rows = order.map(([a,b])=>{
-    const r=result(a,b,DAY);
-    const side=(x,s,cls)=>{
-      const st = !r||r.tie ? '' : (r.w===x?'win':'lose');
-      return '<div class="side '+cls+' '+st+'">'+(cls==='r'?'<span class="sc">'+(s!=null?Math.round(s):'\u2013')+'</span>'+nameBtn(x):nameBtn(x)+'<span class="sc">'+(s!=null?Math.round(s):'\u2013')+'</span>')+'</div>';
-    };
-    let mid='';
-    if (!r) mid='no data';
-    else if (r.tie) mid='tie';
-    else if (r.sa!=null && r.sb!=null) mid='by '+Math.round(Math.abs(r.sa-r.sb));
-    else mid='no-show';
-    return '<div class="mu'+((a===focus||b===focus)?' mine':'')+'">'+side(a,rec(a,DAY).daily,'l')+'<div class="mid">'+mid+'</div>'+side(b,rec(b,DAY).daily,'r')+'</div>';
-  }).join('');
-  let next='';
-  if (focus && TODAY){
-    const t=pairings(TODAY);
-    const p=t.pairs.find(x=>x.includes(focus));
-    if (p){ const opp=p[0]===focus?p[1]:p[0];
-      next='<div class="next"><div><div class="tip">Your next matchup</div><div class="vs">'+esc(focus)+' vs '+esc(opp)+'</div></div><div class="tip" style="text-align:right">Decided by tonight\u2019s sleep<br>and today\u2019s activity</div></div>';
-    } else if (t.bye===focus) next='<div class="next"><div><div class="tip">Your next matchup</div><div class="vs">Bye day</div></div></div>';
-  }
-  const t=record();
-  const rk = names.slice().sort((a,b)=>{
-    const pa=t[a].w/Math.max(1,t[a].w+t[a].l), pb=t[b].w/Math.max(1,t[b].w+t[b].l);
-    return pb-pa || t[b].w-t[a].w;
-  });
-  const table='<table class="rec">'+rk.map(n=>{
-    const x=t[n], g=x.w+x.l;
-    return '<tr class="'+(n===focus?'mine':'')+'"><td>'+nameBtn(n)+'</td><td class="n">'+x.w+'\u2013'+x.l+(x.t?'\u2013'+x.t:'')+'</td><td class="w">'+(g?Math.round(100*x.w/g)+'%':'\u2013')+'</td></tr>';
-  }).join('')+'</table>';
-  return '<section class="sec"><h2>Head to head</h2><p class="note">Everyone gets a new opponent every day. Higher daily score wins.</p>'+next+
-    rows+(y.bye?'<div class="bye">'+esc(y.bye)+' had a bye.</div>':'')+
-    '<h2 style="margin-top:30px;font-size:1.15rem">Record, last 30 days</h2>'+table+'</section>';
+function team(){
+  const k=DAY, feed=[], add=(who,t,when)=>feed.push({who,t,when});
+  const top=famRank('daily',k)[0]; if(top) add('Board','<b>'+esc(top[0])+'</b> won the day with a '+Math.round(top[1])+' daily score.',longDay(k));
+  pairings(k).pairs.forEach(([a,b])=>{ const r=result(a,b,k); if(r&&!r.tie) add('Board','<b>'+esc(r.w)+'</b> beat '+esc(r.l)+(r.sa!=null&&r.sb!=null?' '+Math.round(Math.max(r.sa,r.sb))+' to '+Math.round(Math.min(r.sa,r.sb)):' (no reading from '+esc(r.l)+')')+'.',longDay(k)); });
+  names.forEach(n=>{ const g=streak(n,x=>x.rec!=null&&x.rec>=67); if(g>=3) add('Board','<b>'+esc(n)+'</b> is on a '+g+'-day green recovery streak.',longDay(k));
+    const r=rec(n,k), all=Object.values((H[n]||{}).days||{});
+    const best=(f)=>{ const v=f(r); const vs=all.map(f).filter(x=>x!=null); return v!=null&&vs.length>=7&&v>=Math.max.apply(null,vs); };
+    if (best(x=>x.hrv)) add('Board','<b>'+esc(n)+'</b> hit a 30-day high HRV of '+Math.round(r.hrv)+' ms.',longDay(k));
+    if (best(x=>x.asleep)) add('Board','<b>'+esc(n)+'</b> logged the longest sleep of the month: '+hm(r.asleep)+'.',longDay(k)); });
+  const stp=famRank('steps',k)[0]; if(stp) add('Board','<b>'+esc(stp[0])+'</b> led on steps with '+Math.round(stp[1]).toLocaleString()+'.',longDay(k));
+  const tdy=(D.today||[]).slice().sort((a,b)=>(b.steps||0)-(a.steps||0))[0]; if(tdy&&tdy.steps) add('Board','Right now <b>'+esc(tdy.name)+'</b> leads today\u2019s step race at '+Number(tdy.steps).toLocaleString()+'.','Today');
+  const pts=(D.points||[])[0]; if(pts) add('Board','<b>'+esc(pts[0])+'</b> leads the week with '+pts[1]+' points. Champion crowned Sunday.','This week');
+  const sms='sms:?&body='+encodeURIComponent('Board check: '+(top?top[0]+' won yesterday. ':'')+'Who\u2019s taking today? '+location.href);
+  const boards={rec:'Recovery',strain:'Strain',sleep:'Sleep',steps:'Steps'};
+  return '<h2>Family</h2><p class="note">'+names.length+' members. Tap anyone to see their day.</p>'+
+    '<div class="card"><h3>Team feed</h3><div class="feed">'+feed.map(f=>'<div class="msg"><span class="av" style="background:var(--strain)">\u2605</span><div class="bub"><div class="who2">'+esc(f.who)+'</div><div class="tx">'+f.t+'</div><div class="when">'+esc(f.when)+'</div></div></div>').join('')+'</div>'+
+    '<a class="trash" href="'+sms+'">Talk trash in the group text</a></div>'+
+    '<div class="sec"><h3>Leaderboard</h3><div class="seg">'+Object.keys(boards).map(b=>'<button data-board="'+b+'" aria-pressed="'+(board===b)+'">'+boards[b]+'</button>').join('')+'</div>'+
+    '<div class="card">'+famBars(board,k)+'</div></div>';
 }
 
-function lastNight(){
-  const focus=view||me;
-  const rows=(D.sleep||[]).filter(x=>x.minutes>0);
-  const none=(D.sleep||[]).filter(x=>!(x.minutes>0)).map(x=>x.name);
-  const body=rows.map(x=>{
-    const r=rec(x.name,DAY), tot=Math.max(x.minutes,540);
-    const deep=r.deep||0, rem=r.rem||0, light=Math.max(0,x.minutes-deep-rem);
-    const w=v=>(100*v/tot).toFixed(1)+'%';
-    const meta=[]; if(x.score!=null) meta.push('sleep score '+x.score); if(deep||rem) meta.push(hm(deep+rem)+' deep + REM'); if(x.eff) meta.push(Math.round(x.eff)+'% efficient');
-    return '<div class="row'+(x.name===focus?' mine':'')+'"><div class="top">'+nameBtn(x.name)+'<span class="val">'+esc(x.asleep||'')+'</span></div>'+
-      '<div class="bar">'+(deep||rem?'<i style="width:'+w(deep)+';background:var(--deepc)"></i><i style="width:'+w(rem)+';background:var(--remc)"></i><i style="width:'+w(light)+';background:var(--lightc)"></i>':'<i style="width:'+w(x.minutes)+';background:var(--lightc)"></i>')+'</div>'+
-      '<div class="meta">'+meta.map(m=>'<span>'+esc(m)+'</span>').join('')+'</div></div>';
-  }).join('');
-  return '<section class="sec"><h2>Last night</h2><div class="legend"><span><i style="background:var(--deepc)"></i>Deep</span><span><i style="background:var(--remc)"></i>REM</span><span><i style="background:var(--lightc)"></i>Light</span></div>'+
-    (body||'<p class="note">No nights synced yet.</p>')+
-    (none.length?'<p class="note dim">No reading: '+none.map(esc).join(', ')+'</p>':'')+'</section>';
-}
-
-function todaySoFar(){
-  const focus=view||me, rows=D.today||[];
-  if (!rows.length) return '';
-  const max=Math.max.apply(null, rows.map(x=>x.steps||0).concat([10000]));
-  return '<section class="sec"><h2>Today so far</h2><p class="note">Steps race. Still counting, nothing scored until tonight.</p>'+rows.map(x=>{
-    const meta=[]; if(x.load) meta.push('cardio load '+Math.round(x.load)); if(x.workouts) meta.push(x.workouts+' workout'+(x.workouts===1?'':'s'));
-    return '<div class="row'+(x.name===focus?' mine':'')+'"><div class="top">'+nameBtn(x.name)+'<span class="val">'+(x.steps!=null?Number(x.steps).toLocaleString():'\u2013')+'</span></div>'+
-      '<div class="bar"><i style="width:'+(100*(x.steps||0)/max).toFixed(1)+'%;background:var(--amber)"></i></div>'+
-      (meta.length?'<div class="meta">'+meta.map(m=>'<span>'+esc(m)+'</span>').join('')+'</div>':'')+'</div>';
-  }).join('')+'</section>';
+function h2h(){
+  if (!DAY) return '';
+  const focus=view||me, y=pairings(DAY), t=record();
+  const order=y.pairs.slice().sort((p,q)=>(q.includes(focus)?1:0)-(p.includes(focus)?1:0));
+  const rows=order.map(([a,b])=>{ const r=result(a,b,DAY);
+    const side=(x,s,c)=>{ const st=!r||r.tie?'':(r.w===x?'win':'lose'); const sc='<span class="sc">'+(s!=null?Math.round(s):'\u2013')+'</span>', nm='<span>'+(st==='win'?'<span class="crown">\u265B</span>':'')+esc(x)+'</span>';
+      return '<span class="side '+c+' '+st+'">'+(c==='r'?sc+nm:nm+sc)+'</span>'; };
+    const mid=!r?'no data':r.tie?'tie':(r.sa!=null&&r.sb!=null?'by '+Math.round(Math.abs(r.sa-r.sb)):'no-show');
+    return '<button class="mu tap" data-mu="'+esc(a)+'|'+esc(b)+'">'+side(a,rec(a,DAY).daily,'l')+'<span class="mid">'+mid+'<br>details</span>'+side(b,rec(b,DAY).daily,'r')+'</button>'; }).join('');
+  const nt=pairings(TODAY);
+  const nextRows=nt.pairs.map(([a,b])=>'<div class="rt row"><span class="n">'+esc(a)+'</span><span class="note" style="margin:0">vs</span><span class="n">'+esc(b)+'</span></div>').join('');
+  const rk=names.slice().sort((a,b)=>{ const pa=t[a].w/Math.max(1,t[a].w+t[a].l), pb=t[b].w/Math.max(1,t[b].w+t[b].l); return pb-pa||t[b].w-t[a].w; });
+  return '<h2>Head to head</h2><p class="note">New opponent every day. Higher daily score wins. Tap a matchup for the stat-by-stat.</p>'+
+    '<div class="card"><h3>'+longDay(DAY)+' results</h3>'+rows+(y.bye?'<p class="note" style="margin:8px 0 0">'+esc(y.bye)+' had a bye.</p>':'')+'</div>'+
+    '<div class="card sec"><h3>Today\u2019s matchups</h3>'+nextRows+(nt.bye?'<p class="note" style="margin:8px 0 0">'+esc(nt.bye)+' has a bye.</p>':'')+'</div>'+
+    '<div class="card sec"><h3>Record, last 30 days</h3><table class="t">'+rk.map(n=>{ const x=t[n],g=x.w+x.l;
+      return '<tr class="'+(n===focus?'me':'')+'"><td>'+esc(n)+(x.streak>=2?' <span class="chip hot" style="padding:2px 7px">'+x.streak+'W streak</span>':'')+'</td><td class="r">'+x.w+'\u2013'+x.l+(x.t?'\u2013'+x.t:'')+'</td><td class="b">'+(g?Math.round(100*x.w/g)+'%':'\u2013')+'</td></tr>'; }).join('')+'</table></div>';
 }
 
 function week(){
   const focus=view||me, pts=D.points||[];
   const top=pts.length?Math.max.apply(null,pts.map(x=>Math.max(0,x[1]))):1;
-  const race=pts.map((x,i)=>'<div class="row'+(i===0?' first':'')+(x[0]===focus?' mine':'')+'"><div class="top">'+nameBtn(x[0])+'<span class="val">'+x[1]+'</span></div>'+
-    '<div class="bar"><i style="width:'+(100*Math.max(0,x[1])/(top||1)).toFixed(1)+'%"></i></div></div>').join('');
-  const day_n=D.day_n||0, left=7-day_n;
-  const headline=['Sleep Score','Recovery','Effort','Steps'];
-  const catBox=c=>'<div class="cat'+(c.penalty?' pen':'')+'"><h3>'+esc(c.label)+'</h3>'+
-    (c.entries.length?'<ol>'+c.entries.slice(0,3).map(e=>'<li><span>'+esc(e[0])+'</span><span>'+esc(e[1])+'</span></li>').join('')+'</ol>':'<p class="note" style="margin:0">Nobody yet</p>')+'</div>';
-  const cats=D.categories||[];
-  const head=cats.filter(c=>headline.includes(c.label)), rest=cats.filter(c=>!headline.includes(c.label));
-  return '<section class="sec"><h2>Race for the week</h2><p class="note">Day '+day_n+' of 7. '+(left>0?left+' day'+(left===1?'':'s')+' left, champion crowned Sunday.':'Champion crowned Sunday.')+'</p>'+
-    '<div class="race">'+race+'</div>'+
-    '<div class="cats">'+head.map(catBox).join('')+'</div>'+
-    (rest.length?'<details class="all"><summary>All '+cats.length+' categories</summary><div class="cats">'+rest.map(catBox).join('')+'</div></details>':'')+
-  '</section>';
+  const race=pts.map((x,i)=>'<button class="row tap'+(x[0]===focus?' me':'')+'" data-view="'+esc(x[0])+'"><div class="rt"><span class="n"><span class="rank">'+(i+1)+'</span>'+esc(x[0])+'</span><span class="v">'+x[1]+'</span></div><div class="bar"><i style="width:'+(100*Math.max(0,x[1])/(top||1)).toFixed(1)+'%;background:'+(i===0?'var(--dawn)':'var(--text)')+'"></i></div></button>').join('');
+  const dn=D.day_n||0, left=7-dn;
+  const box=c=>'<div class="cat'+(c.penalty?' pen':'')+'"><h4>'+esc(c.label)+'</h4>'+(c.entries.length?'<ol>'+c.entries.slice(0,3).map(e=>'<li><span>'+esc(e[0])+'</span><span>'+esc(e[1])+'</span></li>').join('')+'</ol>':'<p class="note" style="margin:0">Nobody yet</p>')+'</div>';
+  return '<h2>Race for the week</h2><p class="note">Day '+dn+' of 7. '+(left>0?left+' day'+(left===1?'':'s')+' left. ':'')+'Champion crowned Sunday.</p>'+
+    '<div class="card">'+race+'</div><div class="sec"><h3>Categories</h3><div class="cats">'+(D.categories||[]).map(box).join('')+'</div></div>';
 }
 
-function trend(n){
-  if (!DAY || !H[n]) return '';
-  const ks=[]; for (let i=13;i>=0;i--) ks.push(addDays(DAY,-i));
-  const bars=ks.map(k=>{ const r=rec(n,k), v=r.rec;
-    return '<i title="'+k+': recovery '+(v==null?'none':Math.round(v))+'" style="height:'+(v==null?4:Math.max(6,v))+'%;background:'+(v==null?'var(--raise)':band(v))+'"></i>'; }).join('');
-  return '<section class="sec"><h2>'+esc(n)+'\u2019s last two weeks</h2><p class="note">Recovery each morning. Green 67 and up, yellow 34 to 66, red below.</p>'+
-    '<div class="trend">'+bars+'</div><div class="tl"><span>2 weeks ago</span><span>Last night</span></div></section>';
+/* ---------- detail sheets ---------- */
+function statsRow(m, n, keys){
+  const vs=keys.map(k=>val(m,n,k)), have=vs.filter(v=>v!=null);
+  const fr=famRank(m,DAY), pos=fr.findIndex(x=>x[0]===n);
+  const hi=M[m].hi!==false;
+  const best=have.length?(hi?Math.max:Math.min).apply(null,have):null;
+  const st=(k,v)=>'<div class="stat"><div class="v">'+v+'</div><div class="k">'+k+'</div></div>';
+  return '<div class="stats">'+st(range+'d avg',have.length?M[m].fmt(avg(have)):'\u2013')+st('Best',best!=null?M[m].fmt(best):'\u2013')+st('Readings',have.length+'/'+keys.length)+st('Family',pos>=0?ord(pos+1):'\u2013')+'</div>';
 }
+function rangeSeg(){ return '<div class="seg" style="margin-top:14px">'+[7,14,30].map(d=>'<button data-range="'+d+'" aria-pressed="'+(range===d)+'">'+d+' days</button>').join('')+'</div>'; }
 
-function render(){
-  const app=document.getElementById('app');
-  let h='';
-  if (!me && !view){ h+=picker(); }
-  else {
-    h+=whoStrip()+hero(view);
+function sheetHtml(m, n){
+  const keys=days(range), r=rec(n,DAY), b=base(n), det=detailOf(n)||{};
+  const v=val(m,n,DAY);
+  const head='<button class="back" data-close="1">\u2190 Back</button>'+
+    '<div class="hd"><div class="k">'+esc(n)+'\u2019s '+M[m].label+'</div><div class="big" style="color:'+(v==null?'var(--faint)':M[m].col(v))+'">'+(v==null?'\u2013':M[m].fmt(v))+'</div><div class="s">'+longDay(DAY)+'</div></div>';
+  const vals=keys.map(k=>val(m,n,k));
+  let body=rangeSeg()+'<div class="card"><h3>'+range+'-day trend</h3>'+bars(vals,keys,x=>M[m].col(x),M[m].max,avg(vals))+'<div class="legend"><span><i style="background:var(--muted)"></i>dashed line is your '+range+'-day average</span></div></div>'+statsRow(m,n,keys);
+  if (m==='rec'){
+    body+='<div class="card sec"><h3>What drove it</h3>'+
+      devRow('HRV',r.hrv,b.hrv,x=>Math.round(x)+' ms',true)+
+      devRow('Resting heart rate',r.rhr,b.rhr,x=>Math.round(x)+' bpm',false)+
+      devRow('Respiratory rate',r.rr,b.rr,x=>x.toFixed(1)+' rpm',null)+
+      devRow('Sleep',r.asleep,b.dur,hm,true)+'</div>';
+    body+='<div class="card sec"><h3>HRV and resting HR, '+range+' days</h3>'+lines([{vals:keys.map(k=>val('hrv',n,k)),col:'var(--green)',bold:true}],keys,110)+lines([{vals:keys.map(k=>val('rhr',n,k)),col:'var(--red)',bold:true}],keys,90)+'<div class="legend"><span><i style="background:var(--green)"></i>HRV</span><span><i style="background:var(--red)"></i>Resting HR</span></div></div>';
   }
-  h+=matchups()+lastNight()+todaySoFar()+week()+(view?trend(view):'');
-  h+='<footer>Updated '+esc(D.stamp||'')+' Eastern. Sleep counts under the night it began.'+(me?' <button class="nmb" data-forget="1">Not '+esc(me)+'?</button>':'')+'</footer>';
+  if (m==='sleep' || m==='asleep' || m==='restor'){
+    const need=b.dur; const debt=need?days(7).reduce((s,k)=>{const a=val('asleep',n,k); return s+(a==null?0:Math.max(0,need-a));},0):null;
+    body+='<div class="card sec"><h3>Stages by night</h3>'+stageBars(n,days(Math.min(range,14)))+'<div class="legend"><span><i style="background:var(--deepc)"></i>Deep</span><span><i style="background:var(--remc)"></i>REM</span><span><i style="background:var(--lightc)"></i>Light</span><span>dashed is your usual</span></div></div>';
+    body+='<div class="card sec"><h3>Last night</h3>'+
+      devRow('Hours asleep',r.asleep,need,hm,true,need?'Your usual is '+hm(need):null)+
+      devRow('Deep sleep',r.deep,null,hm,true,r.asleep&&r.deep!=null?Math.round(100*r.deep/r.asleep)+'% of the night':null)+
+      devRow('REM sleep',r.rem,null,hm,true,r.asleep&&r.rem!=null?Math.round(100*r.rem/r.asleep)+'% of the night':null)+
+      devRow('Efficiency',r.effp,null,x=>Math.round(x)+'%',true,'Share of time in bed actually asleep')+
+      (debt!=null?devRow('Sleep debt, last 7 nights',debt,null,hm,false,'Time short of your usual, added up'):'')+'</div>';
+    if (det.sleep_parts&&det.sleep_parts.length) body+='<div class="card sec"><h3>Sleep score breakdown</h3>'+det.sleep_parts.map(x=>'<div class="contrib"><span class="n">'+esc(x[0])+'</span><span class="m">'+esc(x[1])+'</span></div>').join('')+'</div>';
+  }
+  if (m==='strain' || m==='steps' || m==='load'){
+    body+='<div class="card sec"><h3>Yesterday\u2019s activity</h3>'+
+      devRow('Strain',strainOf(r),null,x=>x.toFixed(1),true,'0 to 21, built from heart-rate zones and steps')+
+      devRow('Cardio load',r.load,null,x=>Math.round(x),true,'Time in heart-rate zones, harder zones count more')+
+      devRow('Steps',r.steps,null,x=>Math.round(x).toLocaleString(),true)+
+      devRow('Workouts',r.wk||0,null,x=>String(x),true)+'</div>';
+    body+='<div class="card sec"><h3>Recovery vs strain</h3>'+lines([{vals:keys.map(k=>val('rec',n,k)),col:'var(--green)',bold:true},{vals:keys.map(k=>{const s=val('strain',n,k);return s==null?null:s*100/21;}),col:'var(--strain)',bold:true}],keys,120)+'<div class="legend"><span><i style="background:var(--green)"></i>Recovery %</span><span><i style="background:var(--strain)"></i>Strain (scaled)</span></div></div>';
+    if (det.activity&&det.activity.length) body+='<div class="card sec"><h3>Activity breakdown</h3>'+det.activity.map(x=>'<div class="contrib"><span class="n">'+esc(x[0])+'</span><span class="v" style="font-family:var(--font);font-weight:400;color:var(--muted)">'+esc(x[1])+'</span></div>').join('')+'</div>';
+  }
+  if (m==='rec' && det.rec_parts&&det.rec_parts.length) body+='<div class="card sec"><h3>Recovery breakdown</h3>'+det.rec_parts.map(x=>'<div class="contrib"><span class="n">'+esc(x[0])+'</span><span class="m">'+esc(x[1])+'</span></div>').join('')+'</div>';
+  body+='<div class="card sec"><h3>Family, '+longDay(DAY)+'</h3>'+famBars(m,DAY)+'</div>';
+  body+='<div class="card sec"><h3>Family trend, '+range+' days</h3>'+lines(names.map(x=>({vals:keys.map(k=>val(m,x,k)),col:colorOf(x),bold:x===n})),keys,150)+
+    '<div class="legend" style="flex-wrap:wrap">'+names.map(x=>'<span><i style="background:'+colorOf(x)+'"></i>'+esc(x)+'</span>').join('')+'</div></div>';
+  return head+body;
+}
+
+function muHtml(a,b){
+  const k=DAY, r=result(a,b,k);
+  const ms=['daily','rec','sleep','strain','hrv','rhr','asleep','restor','steps'];
+  let wa=0,wb=0;
+  const rows=ms.map(m=>{ const va=val(m,a,k), vb=val(m,b,k); let w=null;
+    if (va!=null&&vb!=null&&va!==vb){ const hi=M[m].hi!==false; w=(hi?va>vb:va<vb)?a:b; if(w===a)wa++; else wb++; }
+    const mx=Math.max(va||0,vb||0)||1;
+    return '<div class="contrib"><span class="n">'+M[m].label+'</span><span class="v"></span>'+
+      '<span class="m" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+
+        '<span><span style="font-weight:700;color:'+(w===a?'var(--green)':'var(--muted)')+'">'+(va==null?'\u2013':M[m].fmt(va))+'</span><span class="bar"><i style="margin-left:auto;width:'+(100*(va||0)/mx).toFixed(1)+'%;background:'+colorOf(a)+'"></i></span></span>'+
+        '<span style="text-align:right"><span style="font-weight:700;color:'+(w===b?'var(--green)':'var(--muted)')+'">'+(vb==null?'\u2013':M[m].fmt(vb))+'</span><span class="bar"><i style="width:'+(100*(vb||0)/mx).toFixed(1)+'%;background:'+colorOf(b)+'"></i></span></span>'+
+      '</span></div>'; }).join('');
+  const k30=days(30); let ha=0,hb=0;
+  k30.forEach(d=>{ pairings(d).pairs.forEach(([x,y])=>{ if((x===a&&y===b)||(x===b&&y===a)){ const rr=result(x,y,d); if(rr&&!rr.tie){ if(rr.w===a)ha++; else hb++; } } }); });
+  return '<button class="back" data-close="1">\u2190 Back</button>'+
+    '<div class="hd"><div class="k">'+longDay(k)+'</div><div class="big" style="font-size:2.2rem">'+esc(a)+' vs '+esc(b)+'</div>'+
+    '<div class="s">'+(r&&!r.tie?esc(r.w)+' won'+(r.sa!=null&&r.sb!=null?', '+Math.round(Math.max(r.sa,r.sb))+' to '+Math.round(Math.min(r.sa,r.sb)):''):r&&r.tie?'Tie':'No result')+'</div></div>'+
+    '<div class="stats" style="grid-template-columns:repeat(3,1fr)"><div class="stat"><div class="v">'+wa+'\u2013'+wb+'</div><div class="k">Stats won</div></div><div class="stat"><div class="v">'+ha+'\u2013'+hb+'</div><div class="k">Head to head</div></div><div class="stat"><div class="v">'+((record()[a]||{}).w||0)+' vs '+((record()[b]||{}).w||0)+'</div><div class="k">Wins, 30 days</div></div></div>'+
+    '<div class="card sec"><h3>Stat by stat</h3><div class="legend"><span><i style="background:'+colorOf(a)+'"></i>'+esc(a)+'</span><span><i style="background:'+colorOf(b)+'"></i>'+esc(b)+'</span></div>'+rows+'</div>'+
+    '<div class="card sec"><h3>Daily score, last 14 days</h3>'+lines([{vals:days(14).map(d=>val('daily',a,d)),col:colorOf(a),bold:true},{vals:days(14).map(d=>val('daily',b,d)),col:colorOf(b),bold:true}],days(14),130)+'</div>';
+}
+
+/* ---------- shell ---------- */
+const ICONS={home:'<path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>',
+  team:'<circle cx="9" cy="9" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M15 15c2.5-.3 4.5.9 5.3 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  h2h:'<path d="M5 5l6 6M5 11l6-6M13 13l6 6M13 19l6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
+  week:'<path d="M5 20V10M10 20V4M15 20v-7M20 20v-4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>'};
+function nav(){ const L={home:'Home',team:'Team',h2h:'1v1',week:'Week'};
+  return '<nav class="tabs"><div class="in">'+Object.keys(L).map(t=>'<button data-tab="'+t+'" aria-pressed="'+(tab===t)+'"><svg viewBox="0 0 24 24">'+ICONS[t]+'</svg>'+L[t]+'</button>').join('')+'</div></nav>'; }
+function picker(){ return '<section class="pick"><h1>Who are you?</h1><p class="note">Pick your name once. This page will open on your day every time.</p><div class="grid">'+names.map(n=>'<button data-me="'+esc(n)+'">'+esc(n)+'</button>').join('')+'</div></section>'; }
+
+function render(keepScroll){
+  const app=document.getElementById('app'); let h='';
+  if (!me && !view && tab==='home') h+=header()+winStrip()+picker();
+  else {
+    h+=header()+winStrip();
+    if (tab==='home') h+=home();
+    if (tab==='team') h+=team();
+    if (tab==='h2h') h+=h2h();
+    if (tab==='week') h+=week();
+  }
+  h+='<footer>Sleep counts under the night it began. Strain is built from heart-rate zones and steps on a 0 to 21 scale.'+(me?' <button data-forget="1" style="text-decoration:underline">Not '+esc(me)+'?</button>':'')+'</footer>';
+  h+=nav();
+  if (sheet) h+='<div class="sheet" role="dialog" aria-modal="true"><div class="in">'+(sheet.mu?muHtml(sheet.mu[0],sheet.mu[1]):sheetHtml(sheet.m, sheet.n))+'</div></div>';
   app.innerHTML=h;
+  document.body.style.overflow = sheet ? 'hidden' : '';
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     document.querySelectorAll('.ring .arc').forEach(a=>a.setAttribute('stroke-dashoffset',a.getAttribute('data-off')));
     const sel=document.querySelector('.who button[aria-pressed="true"]'); if(sel) sel.scrollIntoView({block:'nearest',inline:'center'});
   }));
+  if (!keepScroll && !sheet) window.scrollTo({top:0});
 }
 
 document.addEventListener('click', e=>{
   const t=e.target.closest('button'); if(!t) return;
-  if (t.dataset.me){ me=t.dataset.me; view=me; try{localStorage.setItem(KEY,me);}catch(_){} render(); window.scrollTo({top:0}); }
-  else if (t.dataset.view){ view=t.dataset.view; render(); window.scrollTo({top:0,behavior:'smooth'}); }
-  else if (t.dataset.forget){ me=null; view=null; try{localStorage.removeItem(KEY);}catch(_){} render(); window.scrollTo({top:0}); }
+  const d=t.dataset;
+  if (d.me){ me=d.me; view=me; tab='home'; try{localStorage.setItem(KEY,me);}catch(_){} render(); }
+  else if (d.forget){ me=null; view=null; tab='home'; try{localStorage.removeItem(KEY);}catch(_){} render(); }
+  else if (d.close){ sheet=null; render(true); }
+  else if (d.range){ range=+d.range; const sc=document.querySelector('.sheet').scrollTop; render(true); const s=document.querySelector('.sheet'); if(s) s.scrollTop=sc; }
+  else if (d.sheet){ if(!view) return; sheet={m:d.sheet,n:view}; render(true); }
+  else if (d.mu){ sheet={mu:d.mu.split('|')}; render(true); }
+  else if (d.board){ board=d.board; render(true); }
+  else if (d.view){ view=d.view; sheet=null; tab='home'; render(); }
+  else if (d.tab){ tab=d.tab; if(tab==='home'&&!view) view=me; render(); }
 });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && sheet){ sheet=null; render(true); } });
 render();
 })();
 </script>
